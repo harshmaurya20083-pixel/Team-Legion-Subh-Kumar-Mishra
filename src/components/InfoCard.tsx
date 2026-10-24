@@ -4,6 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { InfoItem } from "@/data/types";
 import { formatDate } from "@/lib/filters";
 import { CategoryLabel, SampleBadge, SaveButton } from "./bits";
+import { Button } from "@/components/ui/button";
 
 type Variant = "featured" | "standard" | "row";
 
@@ -51,13 +52,12 @@ export function InfoCard({ item, variant = "standard" }: { item: InfoItem; varia
         <div className="flex flex-col justify-between gap-6">
           <p className="text-base leading-relaxed text-background/80">{item.summary}</p>
           <div className="flex items-center justify-between">
-            <Link
+            <Button asChild><Link
               to="/item/$id"
               params={{ id: item.id }}
-              className="inline-flex items-center gap-1 bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
             >
               Read details <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            </Link></Button>
             <SaveButton id={item.id} className="text-background/80 hover:text-background" />
           </div>
         </div>
@@ -66,14 +66,14 @@ export function InfoCard({ item, variant = "standard" }: { item: InfoItem; varia
   }
 
   return (
-    <article className="flex h-full flex-col gap-3 border bg-card p-5 transition-colors hover:border-foreground">
-      <div className="flex items-center justify-between">
+    <article className="flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5 transition-colors hover:border-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <CategoryLabel category={item.category} />
         {item.isSample && <SampleBadge />}
       </div>
       <h3 className="font-display text-xl font-medium leading-snug">{detail}</h3>
       <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{item.summary}</p>
-      <div className="mt-auto flex items-center justify-between pt-3">
+      <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t pt-3">
         <Meta item={item} />
         <SaveButton id={item.id} />
       </div>

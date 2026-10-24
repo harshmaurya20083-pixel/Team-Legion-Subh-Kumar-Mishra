@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, Search } from "lucide-react";
 import { useState } from "react";
 import { CommunityCard } from "@/components/CommunityCard";
 import { InfoCard } from "@/components/InfoCard";
@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/bits";
 import { communities } from "@/data/communities";
 import { informationItems } from "@/data/information";
 import { CATEGORIES } from "@/data/types";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,15 +34,14 @@ function Home() {
   return (
     <div className="space-y-14">
       {/* Intro + search */}
-      <section className="grid gap-6 md:grid-cols-[1.3fr_1fr] md:items-end">
+      <section className="space-y-6 border-b pb-8">
         <div>
           <p className="eyebrow text-primary">Issue 01 · Sample edition</p>
-          <h1 className="mt-2 text-4xl font-semibold leading-[1.05] md:text-6xl">
-            Your world, <em className="text-primary">gathered</em> in one place.
+          <h1 className="mt-2 text-4xl font-semibold leading-tight md:text-5xl">
+            MyWorld, <em className="text-primary">closer to you.</em>
           </h1>
           <p className="mt-3 max-w-lg text-muted-foreground">
-            MyWorld collects learning resources, opportunities, local updates and communities so you
-            can find what's useful without searching ten different apps.
+            Find events, useful opportunities and your next community.
           </p>
         </div>
         <form
@@ -49,7 +49,7 @@ function Home() {
             e.preventDefault();
             navigate({ to: "/explore", search: { q: q.trim() || undefined } });
           }}
-          className="flex items-center gap-2 border-2 border-foreground bg-card p-2"
+          className="flex max-w-2xl items-center gap-2 rounded-md border border-foreground/30 bg-card p-2 focus-within:border-primary"
         >
           <Search className="ml-1 h-5 w-5 text-muted-foreground" />
           <input
@@ -59,8 +59,9 @@ function Home() {
             aria-label="Search information"
             className="w-full bg-transparent py-1 outline-none"
           />
-          <button className="bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground">Search</button>
+           <Button type="submit">Search</Button>
         </form>
+        <Link to="/internships" className="inline-flex items-center gap-2 text-sm text-primary hover:underline"><BriefcaseBusiness className="size-4" />Internship Opportunities<ArrowRight className="size-4" /></Link>
       </section>
 
       {featured && <InfoCard item={featured} variant="featured" />}

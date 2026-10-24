@@ -3,11 +3,12 @@ import { ExternalLink, MapPin } from "lucide-react";
 import type { Community } from "@/data/types";
 import { isValidUrl } from "@/lib/filters";
 import { CategoryLabel, SampleBadge } from "./bits";
+import { Button } from "@/components/ui/button";
 
 export function CommunityCard({ community }: { community: Community }) {
   const hasLink = isValidUrl(community.url);
   return (
-    <article className="flex h-full flex-col gap-3 border bg-card p-5">
+    <article className="flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5">
       <div className="flex items-center justify-between gap-2">
         <span className="font-mono text-xs font-medium">{community.platform}</span>
         {community.isSample && <SampleBadge />}
@@ -30,19 +31,18 @@ export function CommunityCard({ community }: { community: Community }) {
       </div>
       <div className="mt-auto pt-3">
         {hasLink ? (
-          <a
+          <Button asChild><a
             href={community.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 bg-foreground px-3 py-1.5 text-sm text-background hover:bg-primary"
           >
             Visit community <ExternalLink className="h-3.5 w-3.5" />
-          </a>
+          </a></Button>
         ) : (
           <div>
-            <button disabled className="cursor-not-allowed border px-3 py-1.5 text-sm text-muted-foreground">
+            <Button variant="outline" disabled>
               Link unavailable
-            </button>
+            </Button>
             <p className="mt-1.5 text-xs text-muted-foreground">
               This is a sample community — no real invite link exists yet.
             </p>

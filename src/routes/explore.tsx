@@ -20,9 +20,9 @@ export const Route = createFileRoute("/explore")({
   }),
   head: () => ({
     meta: [
-      { title: "Explore — MyWorld" },
+      { title: "Explore Events — MyWorld" },
       { name: "description", content: "Search and filter resources, opportunities, events and updates by topic and source." },
-      { property: "og:title", content: "Explore — MyWorld" },
+      { property: "og:title", content: "Explore Events — MyWorld" },
       { property: "og:description", content: "Search and filter everything on MyWorld." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -51,7 +51,9 @@ function Explore() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-primary">Explore</p>
+        <p className="eyebrow text-primary">Discover</p>
+        <h1 className="mt-2 text-4xl font-semibold md:text-5xl">Explore Events</h1>
+        <p className="mb-5 mt-3 text-sm text-muted-foreground">Sample events, resources and updates. Location-based event discovery is coming in the next stage.</p>
         <SearchInput value={query} onChange={setQuery} placeholder="Search titles, sources, tags…" />
       </header>
 
