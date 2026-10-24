@@ -26,7 +26,7 @@ export const Route = createFileRoute("/item/$id")({
   notFoundComponent: () => (
     <div className="py-20 text-center">
       <h1 className="text-3xl font-semibold">This item doesn't exist</h1>
-      <Link to="/explore" className="mt-4 inline-block text-primary hover:underline">Back to Explore</Link>
+      <Link to="/resources" className="mt-4 inline-block text-primary hover:underline">Back to Resources</Link>
     </div>
   ),
   component: ItemDetail,
@@ -38,8 +38,8 @@ function ItemDetail() {
 
   return (
     <div className="space-y-12">
-      <Link to="/explore" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" /> Explore
+      <Link to="/resources" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <ArrowLeft className="h-4 w-4" /> Resources
       </Link>
       <article className="max-w-3xl space-y-5">
         <div className="flex items-center gap-3">
@@ -65,7 +65,7 @@ function ItemDetail() {
           ) : (
             <span className="text-xs text-muted-foreground">No external link — this is sample content.</span>
           )}
-          <Link to="/explore" search={{ category: item.category }} className="text-sm text-primary hover:underline">
+          <Link to="/resources" search={{ category: item.category }} className="text-sm text-primary hover:underline">
             More in {item.category}
           </Link>
         </div>
