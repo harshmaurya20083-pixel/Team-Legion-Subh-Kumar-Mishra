@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, type SearchSchemaInput } from "@tanstack/react-router";
 import { Search, X, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { events, EVENT_LOCATIONS, EVENT_CAMPUSES, EVENT_SKILLS, EVENT_ELIGIBILITY } from "@/data/events";
@@ -11,9 +11,10 @@ import { Button } from "@/components/ui/button";
 
 const list = (value: unknown): string[] => Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : typeof value === "string" && value ? [value] : [];
 const text = (value: unknown): string => typeof value === "string" ? value : "";
+type EventSearchInput = SearchSchemaInput & { q?: string; category?: string; categories?: string[]; formats?: string[]; locations?: string[]; skills?: string[]; eligibility?: string[]; organizers?: string[]; from?: string; until?: string; sort?: string };
 
 export const Route = createFileRoute("/explore")({
-  validateSearch: (s: Record<string, unknown>) => ({ q: text(s["q"]) || undefined, category: text(s["category"]) || undefined, categories: list(s["categories"]), formats: list(s["formats"]), locations: list(s["locations"]), skills: list(s["skills"]), eligibility: list(s["eligibility"]), organizers: list(s["organizers"]), from: text(s["from"]), until: text(s["until"]), sort: text(s["sort"]) || "upcoming" }),
+  validateSearch: (s: EventSearchInput) => ({ q: text(s.q) || undefined, category: text(s.category) || undefined, categories: list(s.categories), formats: list(s.formats), locations: list(s.locations), skills: list(s.skills), eligibility: list(s.eligibility), organizers: list(s.organizers), from: text(s.from), until: text(s.until), sort: text(s.sort) || "upcoming" }),
   head: () => ({ meta: [{ title: "Explore Events — MyWorld" }, { name: "description", content: "Discover clearly labelled sample hackathons, workshops, meetups, conferences and competitions by city, date, format and interests." }, { property: "og:title", content: "Explore Events — MyWorld" }, { property: "og:description", content: "Find sample events in Austin, Seattle, Boston or online with transparent filters." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: ExploreEvents,
 });
