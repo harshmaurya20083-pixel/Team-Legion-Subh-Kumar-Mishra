@@ -16,3 +16,5 @@
 - Never invent external/invite URLs; cards disable links unless `isValidUrl` passes.
 - Preserve public URLs; the shared AppShell owns six desktop destinations and four mobile tabs plus an accessible More sheet, so navigation remains consistent without crowding small screens.
 - Use the shared Button and semantic CSS tokens for controls; the internship entry route reuses existing sample records until its preparation-guide stage, avoiding fabricated vacancies or duplicated data.
+- Event fixtures are separate from legacy information records, use namespaced IDs in the existing saved context, and expose only published/approved records; event filter state lives in URL search parameters so links and reloads preserve selections.
+- Explore at /explore is event-specific; legacy resource discovery remains available at /resources and existing /item/$id links remain intact to preserve earlier saved content.

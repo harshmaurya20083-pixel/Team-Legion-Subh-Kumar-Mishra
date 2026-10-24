@@ -1,5 +1,5 @@
 // Plain functions for search and filtering. No React here, so they are easy to test.
-import type { Community, InfoItem } from "@/data/types";
+import type { Community, DiscoveryEvent, InfoItem } from "@/data/types";
 
 /** Case-insensitive "does any of these texts contain the query?" */
 function matchesQuery(query: string, fields: string[]): boolean {
@@ -67,4 +67,54 @@ export function formatDate(iso: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+export interface EventFilters {
+  query: string;
+  categories: string[];
+  formats: string[];
+  locations: string[];
+  skills: string[];
+  eligibility: string[];
+  organizers: string[];
+  from: string;
+  until: string;
+  sort: string;
+}
+
+/** Deterministic keyword ranking; no inferred ability or personal score. */
+export function eventRelevance(event: DiscoveryEvent, query: string): number {
+  const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  return terms.reduce((score, term) => score
+    + (event.title.toLowerCase().includes(term) ? 4 : 0)
+    + (event.organizer.toLowerCase().includes(term) ? 2 : 0)
+    + (event.tags.some((tag) => tag.toLowerCase().includes(term)) ? 2 : 0)
+    + (event.description.toLowerCase().includes(term) ? 1 : 0), 0);
+}
+
+export function filterEvents(list: DiscoveryEvent[], f: EventFilters, today: string): DiscoveryEvent[] {
+  const terms = f.query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const validDate = (date: string) => /^\d{4}-\d{2}-\d{2}$/.test(date);
+  const from = validDate(f.from) ? f.from : today;
+  const until = validDate(f.until) ? f.until : "9999-12-31";
+  return list.filter((event) => {
+    const text = [event.title, event.description, event.organizer, ...event.tags].join(" ").toLowerCase();
+    return event.status === "published" && event.reviewStatus === "approved"
+      && event.endDate >= today && event.date >= from && event.date <= until
+      && terms.every((term) => text.includes(term))
+      && matchesSelection(f.categories, event.category)
+      && matchesSelection(f.formats, event.format)
+      && (f.locations.length === 0 || f.locations.some((location) => [event.city, event.campus].some((value) => value.toLowerCase() === location.toLowerCase().trim())))
+      && (f.skills.length === 0 || f.skills.some((skill) => event.skills.includes(skill)))
+      && (f.eligibility.length === 0 || f.eligibility.some((value) => event.eligibility.includes(value)))
+      && matchesSelection(f.organizers, event.organizer);
+  }).sort((a, b) => (f.sort === "relevance" ? eventRelevance(b, f.query) - eventRelevance(a, f.query) : 0)
+    || a.date.localeCompare(b.date) || a.id.localeCompare(b.id));
+}
+
+/** Samples and closed registrations never offer an actionable registration link. */
+export function canRegister(event: DiscoveryEvent, today: string): boolean {
+  return !event.isSample && event.status === "published" && event.reviewStatus === "approved"
+    && event.endDate >= today && (!event.registrationDeadline || event.registrationDeadline >= today)
+    && isValidUrl(event.registrationUrl);
 }

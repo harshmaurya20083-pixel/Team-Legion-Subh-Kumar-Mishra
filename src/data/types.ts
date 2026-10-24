@@ -53,3 +53,37 @@ export interface Community {
   url?: string; // never invent invite links — leave empty for sample groups
   isSample: boolean;
 }
+
+export const EVENT_CATEGORIES = ["Hackathons", "Workshops", "Meetups", "Conferences", "Competitions"] as const;
+export const EVENT_FORMATS = ["Online", "Offline", "Hybrid"] as const;
+export interface DiscoveryEvent {
+  id: string;
+  title: string;
+  description: string;
+  category: (typeof EVENT_CATEGORIES)[number];
+  format: (typeof EVENT_FORMATS)[number];
+  city: string;
+  campus: string;
+  venue: string;
+  onlineDetails?: string;
+  date: string;
+  endDate: string;
+  timeZone: string;
+  schedule: { time: string; activity: string }[];
+  registrationDeadline?: string;
+  organizer: string;
+  organizerDescription: string;
+  communityId?: string;
+  eligibility: string[];
+  eligibilityDetails: string;
+  skills: string[];
+  skillsDetails: string;
+  tags: string[];
+  registrationUrl?: string;
+  sourceUrl?: string;
+  sourceName: string;
+  updatedAt: string;
+  status: "published" | "pending" | "archived";
+  reviewStatus: "approved" | "pending" | "rejected";
+  isSample: boolean;
+}
