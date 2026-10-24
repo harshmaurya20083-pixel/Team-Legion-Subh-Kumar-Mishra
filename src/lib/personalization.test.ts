@@ -1,0 +1,15 @@
+import {describe,it,expect} from 'vitest';
+import {events} from '@/data/events';
+import {internships} from '@/data/internships';
+import {defaultPreferences,preferencesSchema,recommendEvents,followedEvents} from './personalization';
+import {filterInternships,alternativeInternships,canApply} from './internships';
+describe('Personalization without assessments',()=>{
+  it('explains interest and location matches',()=>{const r=recommendEvents(events,{...defaultPreferences,interests:['React'],location:'Virtual'},'2026-10-24');expect(r.find(x=>x.event.id==='event-virtual-react')?.reasons).toContain('Matches your interest in React');expect(r.find(x=>x.event.id==='event-virtual-react')?.reasons).toContain('Within your selected location');});
+  it('explains category format and date preferences',()=>{const r=recommendEvents(events,{...defaultPreferences,categories:['Hackathons'],formats:['Offline'],from:'2026-11-01',until:'2026-11-30'},'2026-10-24');expect(r.find(x=>x.event.id==='event-austin-build')?.reasons).toContain('Matches your hackathons preference');expect(r.find(x=>x.event.id==='event-austin-build')?.reasons).toContain('Matches your in-person format preference');expect(r.find(x=>x.event.id==='event-austin-build')?.reasons).toContain('Within your selected dates');});
+  it('does not recommend hidden or expired events',()=>{const e=events[0];if(!e)throw new Error('fixture');expect(recommendEvents([{...e,status:'pending'},{...e,reviewStatus:'pending'},{...e,endDate:'2020-01-01'}],{...defaultPreferences,location:'Austin'},'2026-10-24')).toEqual([]);});
+  it('finds upcoming events only through explicit community IDs',()=>{expect(followedEvents(events,['c1'],'2026-10-24').map(e=>e.id)).toEqual(['event-virtual-react','event-boston-web']);expect(followedEvents(events,[],'2026-10-24')).toEqual([]);});
+  it('rejects invalid preference dates and ordering',()=>{expect(preferencesSchema.safeParse({...defaultPreferences,from:'2026-02-30'}).success).toBe(false);expect(preferencesSchema.safeParse({...defaultPreferences,from:'2026-12-01',until:'2026-11-01'}).success).toBe(false);});
+  it('filters internship role location and work format',()=>{expect(filterInternships(internships,{query:'',roles:['Research'],locations:['Boston'],formats:['In-person']}).map(i=>i.id)).toEqual(['internship-research-sample']);});
+  it('never enables sample applications even with a URL',()=>{const i=internships[0];if(!i)throw new Error('fixture');expect(canApply({...i,applicationUrl:'https://example.org'},'2026-10-24')).toBe(false);});
+  it('offers alternatives for published preferences, not user ability',()=>{const i=internships[0];if(!i)throw new Error('fixture');const r=alternativeInternships(internships,i,{...defaultPreferences,internshipRoles:['Research']},'2026-10-24');expect(r[0]?.item.id).toBe('internship-research-sample');expect(r[0]?.reasons).toContain('Matches your research role preference');});
+});
