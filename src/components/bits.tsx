@@ -38,7 +38,7 @@ export function SampleBadge() {
 }
 
 export function SaveButton({ id, className }: { id: string; className?: string }) {
-  const { isSaved, toggleSaved } = useSaved();
+  const { isSaved, toggleSaved, ready, busy } = useSaved();
   const saved = isSaved(id);
   const Icon = saved ? BookmarkCheck : Bookmark;
   return (
@@ -47,6 +47,7 @@ export function SaveButton({ id, className }: { id: string; className?: string }
       size="sm"
       type="button"
       onClick={() => toggleSaved(id)}
+      disabled={!ready || busy}
       aria-pressed={saved}
       aria-label={saved ? "Remove from saved" : "Save item"}
       className={cn(

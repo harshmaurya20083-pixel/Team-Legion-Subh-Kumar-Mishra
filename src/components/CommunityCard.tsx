@@ -1,11 +1,14 @@
 // A single community in the directory. The Join button only works when a real link exists.
-import { ExternalLink, MapPin } from "lucide-react";
+import { ExternalLink, MapPin, UserPlus, UserCheck } from "lucide-react";
 import type { Community } from "@/data/types";
 import { isValidUrl } from "@/lib/filters";
 import { CategoryLabel, SampleBadge } from "./bits";
 import { Button } from "@/components/ui/button";
+import { usePersonal } from '@/lib/personal';
 
 export function CommunityCard({ community }: { community: Community }) {
+  const {state,toggle,ready,busy}=usePersonal();
+  const followed=state.marks.some(m=>m.kind==='follow'&&m.id===community.id);
   const hasLink = isValidUrl(community.url);
   return (
     <article className="flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5">
@@ -30,6 +33,7 @@ export function CommunityCard({ community }: { community: Community }) {
         ))}
       </div>
       <div className="mt-auto pt-3">
+        <Button className="mb-3" variant={followed?'secondary':'outline'} aria-pressed={followed} disabled={!ready||busy} onClick={()=>toggle('follow',community.id)}>{followed?<UserCheck />:<UserPlus />}{followed?'Following':'Follow community'}</Button>
         {hasLink ? (
           <Button asChild><a
             href={community.url}
