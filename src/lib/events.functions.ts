@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { events } from '@/data/events';
-import { duplicateSchema, eventPayload, fixtureDuplicates, moderationSchema, submissionSchema } from './submission';
+import { duplicateSchema, eventPayload, fixtureDuplicates, moderationSchema, submissionSchema, storedEventSchema } from './submission';
 import type { DiscoveryEvent } from '@/data/types';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -16,7 +16,10 @@ export const listPublishedEvents = createServerFn({ method: 'GET' }).handler(asy
   for (let offset = 0; ; offset += 500) {
     const { data, error } = await client.from('event_records').select('id,event,updated_at').eq('status', 'published').order('id').range(offset, offset + 499);
     if (error) throw new Error('Unable to load published events');
-    for (const row of data ?? []) result.push({ ...(row.event as unknown as Omit<DiscoveryEvent, 'id' | 'status' | 'reviewStatus' | 'updatedAt'>), id: `event-${row.id}`, status: 'published', reviewStatus: 'approved', updatedAt: row.updated_at.slice(0, 10) });
+    for (const row of data ?? []) {
+      const parsed = storedEventSchema.safeParse(row.event);
+      if (parsed.success) result.push({ ...parsed.data, id: `event-${row.id}`, status: 'published', reviewStatus: 'approved', updatedAt: row.updated_at.slice(0, 10) });
+    }
     if (!data || data.length < 500) break;
   }
   return result;

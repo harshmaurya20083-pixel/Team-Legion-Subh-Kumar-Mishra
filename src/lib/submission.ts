@@ -16,6 +16,14 @@ export const submissionSchema = z.object({
   if (v.date < new Date().toISOString().slice(0, 10)) ctx.addIssue({ code: 'custom', path: ['date'], message: 'Choose today or a future date' });
   for (const key of ['skillsText', 'tagsText'] as const) if (v[key].split(',').filter(s => s.trim()).length > 30) ctx.addIssue({ code: 'custom', path: [key], message: 'Use no more than 30 entries' });
   if (v.scheduleText.split('\n').filter(s => s.trim()).length > 30) ctx.addIssue({ code: 'custom', path: ['scheduleText'], message: 'Use no more than 30 schedule entries' });
+  if (v.scheduleText.split('\n').filter(s => s.trim()).some(s => { const [time, ...activity] = s.split('|'); return !time?.trim() || time.trim().length > 100 || !activity.join('|').trim() || activity.join('|').trim().length > 2000; })) ctx.addIssue({ code: 'custom', path: ['scheduleText'], message: 'Each entry needs a time and activity separated by |' });
+});
+export const storedEventSchema = z.object({
+  title: text(160), description: text(10000), category: z.enum(EVENT_CATEGORIES), format: z.enum(EVENT_FORMATS),
+  organizer: text(160), organizerDescription: text(2000), date, endDate: date, registrationDeadline: date,
+  city: text(100), campus: text(2000), venue: text(2000), timeZone: text(100), onlineDetails: z.string().max(2000),
+  eligibilityDetails: text(2000), skillsDetails: text(2000), skills: z.array(text(2000)).max(30), tags: z.array(text(2000)).max(30), eligibility: z.array(text(2000)).max(30),
+  schedule: z.array(z.object({ time: text(100), activity: text(2000) })).min(1).max(30), sourceName: text(2000), sourceUrl: url, registrationUrl: url, isSample: z.boolean(),
 });
 export type SubmissionInput = z.infer<typeof submissionSchema>;
 export const duplicateSchema = z.object({ id: z.string(), title: z.string(), date: z.string(), city: z.string(), published: z.boolean(), reason: z.string() });
