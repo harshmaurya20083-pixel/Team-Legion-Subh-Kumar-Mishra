@@ -169,12 +169,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_event_duplicates: { Args: { candidate: Json }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      moderate_event: {
+        Args: { action: string; reason?: string; record_id: string }
+        Returns: undefined
+      }
+      normalize_event_text: { Args: { v: string }; Returns: string }
+      normalize_event_url: { Args: { v: string }; Returns: string }
+      submit_event: {
+        Args: { acknowledged?: boolean; candidate: Json; contact: string }
+        Returns: Json
       }
     }
     Enums: {

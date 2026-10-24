@@ -8,6 +8,13 @@
       "when": 1792859422268,
       "tag": "0000_moderation_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792859455854,
+      "tag": "0001_moderation_operations",
+      "breakpoints": true
     }
   ]
 }
