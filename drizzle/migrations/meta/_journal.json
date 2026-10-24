@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792859422268,
+      "tag": "0000_moderation_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792859455854,
+      "tag": "0001_moderation_operations",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792859726101,
+      "tag": "0002_submission_payload_validation",
+      "breakpoints": true
+    }
+  ]
+}

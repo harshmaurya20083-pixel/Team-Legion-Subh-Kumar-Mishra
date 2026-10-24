@@ -1,14 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight, CalendarDays, MapPin, Users } from "lucide-react";
-import { events } from "@/data/events";
+import { publicEventsOptions, usePublicEvents } from "@/lib/event-query";
 import { Button } from "@/components/ui/button";
 import { SampleBadge, SaveButton, EmptyState } from "@/components/bits";
 import { canRegister, formatDate, isValidUrl } from "@/lib/filters";
 import workshopImage from "@/assets/student-workshop.jpg";
 
 export const Route = createFileRoute("/events/$id")({
-  head: ({ params }) => {
-    const event = events.find((item) => item.id === params.id && item.status === "published" && item.reviewStatus === "approved");
+  loader: ({ context }) => context.queryClient.ensureQueryData(publicEventsOptions),
+  head: ({ params, loaderData }) => {
+    const event = loaderData?.find((item) => item.id === params.id && item.status === "published" && item.reviewStatus === "approved");
     const title = event ? `${event.title}${event.isSample ? " (Sample)" : ""} — MyWorld` : "Event unavailable — MyWorld";
     const description = event?.description ?? "This event is unavailable. Explore other MyWorld events.";
     return { meta: [{ title }, { name: "description", content: description }, { property: "og:title", content: title }, { property: "og:description", content: description }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, ...(!event ? [{ name: "robots", content: "noindex" }] : [])] };
@@ -17,6 +18,7 @@ export const Route = createFileRoute("/events/$id")({
 });
 
 function EventDetails() {
+  const events = usePublicEvents();
   const { id } = Route.useParams();
   const event = events.find((item) => item.id === id && item.status === "published" && item.reviewStatus === "approved");
   if (!event) return <EmptyState title="Event unavailable" body="This event may no longer be available." action={<Button asChild><Link to="/explore">Explore Events</Link></Button>} />;
@@ -45,7 +47,7 @@ function EventDetails() {
           <h2 className="text-2xl font-semibold">Registration</h2>
           <p className="text-sm">{event.registrationDeadline ? `Deadline: ${formatDate(event.registrationDeadline)}` : "No deadline supplied"}</p>
           {register ? <Button asChild className="w-full"><a href={event.registrationUrl} target="_blank" rel="noopener noreferrer">Register<ArrowUpRight /></a></Button> : <Button disabled className="w-full">Registration unavailable</Button>}
-          <p className="text-sm leading-relaxed text-muted-foreground">{event.isSample ? "This is a sample event. No real registration or official event link exists; you cannot register here." : "Registration is closed or no valid official registration link has been supplied."}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{event.isSample ? "This is a sample event. Registration and official links are disabled." : register ? "Registration opens on the supplied official website. Check the organizer’s requirements before registering." : "Registration is closed or no valid official registration link has been supplied."}</p>
           <div className="border-t pt-5"><p className="eyebrow mb-2 text-muted-foreground">Source</p><p className="text-sm">{event.sourceName}</p><p className="mt-2 text-xs text-muted-foreground">Updated {formatDate(event.updatedAt)}</p>{!event.isSample && isValidUrl(event.sourceUrl) && <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm text-primary">Official event source</a>}</div>
         </aside>
       </div>

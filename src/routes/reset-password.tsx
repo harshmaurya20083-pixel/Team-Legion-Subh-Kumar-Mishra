@@ -1,0 +1,12 @@
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+export const Route = createFileRoute('/reset-password')({ head: () => ({ meta: [{ title: 'Reset password — MyWorld' }, { name: 'description', content: 'Set a new password for your MyWorld account.' }, { property: 'og:title', content: 'Reset password — MyWorld' }, { property: 'og:description', content: 'Recover your MyWorld account.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }] }), component: Reset });
+function Reset() {
+  const [recovery, setRecovery] = useState(false), [message, setMessage] = useState(''), [busy, setBusy] = useState(false);
+  useEffect(() => { setRecovery(new URLSearchParams(window.location.hash.slice(1)).get('type') === 'recovery'); }, []);
+  return <div className="mx-auto max-w-md space-y-6"><h1 className="text-4xl">Reset password</h1>{recovery ? <form className="space-y-4" onSubmit={async e => { e.preventDefault(); const f = new FormData(e.currentTarget); const result = z.string().min(8).max(128).safeParse(f.get('password')); if (!result.success || f.get('password') !== f.get('confirm')) { setMessage('Use matching passwords of at least 8 characters.'); return; } setBusy(true); try { const { error } = await supabase.auth.updateUser({ password: result.data }); setMessage(error ? 'Could not reset your password. Request a new link.' : 'Password updated. You can now sign in.'); } finally { setBusy(false); } }}><label className="block text-sm">New password<Input name="password" type="password" autoComplete="new-password" maxLength={128} /></label><label className="block text-sm">Confirm password<Input name="confirm" type="password" autoComplete="new-password" maxLength={128} /></label><Button disabled={busy}>Save new password</Button></form> : <p className="text-sm text-muted-foreground">Open the recovery link from your email to set a new password.</p>}{message && <p role="status">{message}</p>}<Button variant="link" asChild><Link to="/auth">Back to account</Link></Button></div>;
+}

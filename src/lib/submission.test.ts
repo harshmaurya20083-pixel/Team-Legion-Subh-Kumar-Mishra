@@ -1,0 +1,17 @@
+import { describe, expect, it } from 'vitest';
+import { events } from '@/data/events';
+import { fixtureDuplicates, moderationSchema, submissionSchema, type SubmissionInput } from './submission';
+const input: SubmissionInput = { title: 'Student workshop', description: 'A detailed workshop description.', category: 'Workshops', format: 'Offline', organizer: 'Learning circle', organizerDescription: 'Student-run circle', date: '2099-11-01', endDate: '2099-11-01', registrationDeadline: '2099-10-30', city: 'Austin', campus: 'College campus', venue: 'Room 12', timeZone: 'America/Chicago', onlineDetails: '', eligibilityDetails: 'College students', skillsDetails: 'All skill levels welcome', skillsText: 'JavaScript', tagsText: 'learning', scheduleText: '09:00 | Welcome', sourceName: 'Organizer', sourceUrl: '', registrationUrl: '', contactEmail: 'test@example.org', isSample: true };
+describe('Event submission rules', () => {
+  it('accepts a complete future event', () => expect(submissionSchema.safeParse(input).success).toBe(true));
+  it('rejects non-http registration URLs', () => expect(submissionSchema.safeParse({ ...input, registrationUrl: 'javascript:alert(1)' }).success).toBe(false));
+  it('rejects invalid emails', () => expect(submissionSchema.safeParse({ ...input, contactEmail: 'invalid' }).success).toBe(false));
+  it('requires time and activity in schedule entries', () => expect(submissionSchema.safeParse({ ...input, scheduleText: 'No separator' }).success).toBe(false));
+  it('rejects a deadline after the event', () => expect(submissionSchema.safeParse({ ...input, registrationDeadline: '2099-11-02' }).success).toBe(false));
+  it('rejects an end date before the start', () => expect(submissionSchema.safeParse({ ...input, endDate: '2099-10-31' }).success).toBe(false));
+  it('detects normalized titles with matching organizer date city', () => { const e = events[0]; if (!e) throw new Error('No fixture'); expect(fixtureDuplicates({ ...input, title: e.title.toUpperCase() + '!', organizer: e.organizer, date: e.date, city: e.city }, events).map(m => m.id)).toContain(e.id); });
+  it('does not flag a distinct edition with a different date', () => { const e = events[0]; if (!e) throw new Error('No fixture'); expect(fixtureDuplicates({ ...input, title: e.title, organizer: e.organizer, city: e.city }, events)).toEqual([]); });
+  it('flags exact registration URLs regardless of title', () => { const e = events[0]; if (!e) throw new Error('No fixture'); expect(fixtureDuplicates({ ...input, registrationUrl: 'https://example.org/register' }, [{ ...e, registrationUrl: 'https://example.org/register/' }])).toHaveLength(1); });
+  it('requires a reason for rejection and requested changes', () => { for (const action of ['rejected', 'changes_requested', 'archived']) expect(moderationSchema.safeParse({ id: '00000000-0000-4000-8000-000000000001', action, reason: '' }).success).toBe(false); });
+  it('allows approval without a reason but rejects unknown status', () => { expect(moderationSchema.safeParse({ id: '00000000-0000-4000-8000-000000000001', action: 'published', reason: '' }).success).toBe(true); expect(moderationSchema.safeParse({ id: '00000000-0000-4000-8000-000000000001', action: 'auto_publish', reason: '' }).success).toBe(false); });
+});

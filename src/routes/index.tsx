@@ -8,12 +8,13 @@ import { communities } from "@/data/communities";
 import { informationItems } from "@/data/information";
 import { CATEGORIES } from "@/data/types";
 import { Button } from "@/components/ui/button";
-import { events } from "@/data/events";
+import { publicEventsOptions, usePublicEvents } from "@/lib/event-query";
 import { EventCard } from "@/components/EventCard";
 import { EVENT_CATEGORIES } from "@/data/types";
 import { filterEvents } from "@/lib/filters";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(publicEventsOptions),
   head: () => ({
     meta: [
       { title: "MyWorld — Discover information & communities that matter to you" },
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
+  const events = usePublicEvents();
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const byDate = [...informationItems].sort((a, b) => b.date.localeCompare(a.date));
@@ -69,7 +71,7 @@ function Home() {
         <Link to="/internships" className="inline-flex items-center gap-2 text-sm text-primary hover:underline"><BriefcaseBusiness className="size-4" />Internship Opportunities<ArrowRight className="size-4" /></Link>
       </section>
 
-      <section><SectionHeading eyebrow="Sample event edition" title="Coming up next" action={<Link to="/explore" className="text-sm text-primary">Explore Events</Link>} /><div className="mb-5 flex flex-wrap gap-2">{EVENT_CATEGORIES.map((category) => <Button key={category} asChild variant="outline" size="sm"><Link to="/explore" search={{ category }}>{category}</Link></Button>)}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{upcoming.slice(0, 3).map((event) => <EventCard key={event.id} event={event} />)}</div></section>
+      <section><SectionHeading eyebrow="Reviewed events · Labelled samples" title="Coming up next" action={<Link to="/explore" className="text-sm text-primary">Explore Events</Link>} /><div className="mb-5 flex flex-wrap gap-2">{EVENT_CATEGORIES.map((category) => <Button key={category} asChild variant="outline" size="sm"><Link to="/explore" search={{ category }}>{category}</Link></Button>)}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{upcoming.slice(0, 3).map((event) => <EventCard key={event.id} event={event} />)}</div></section>
 
       {featured && <InfoCard item={featured} variant="featured" />}
 

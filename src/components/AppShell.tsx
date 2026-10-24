@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Bookmark, BriefcaseBusiness, Compass, Home, Menu, Search, SlidersHorizontal, Users } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useSaved } from "@/lib/saved";
+import { useAccount } from "@/lib/account";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
@@ -49,6 +50,7 @@ function QuickSearch() {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { savedIds } = useSaved();
+  const { user } = useAccount();
   const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div className="min-h-screen md:grid md:grid-cols-[240px_minmax(0,1fr)]">
@@ -73,9 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <p className="mt-auto text-xs leading-relaxed text-muted-foreground">
-          Sample edition<br />All listings are demonstration content.
-        </p>
+        <div className="mt-auto space-y-3"><Button asChild variant="outline" className="w-full"><Link to="/submit-event">Submit an event</Link></Button><Button asChild variant="ghost" className="w-full"><Link to="/auth">{user ? "Your account" : "Sign in"}</Link></Button><p className="text-xs leading-relaxed text-muted-foreground">Samples are labelled.<br />Community submissions require review.</p></div>
       </aside>
 
       {/* Mobile top bar */}
@@ -113,6 +113,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               {NAV.map(({ to, label, icon: Icon }) => (
                 <Link key={to} to={to} onClick={() => setMenuOpen(false)} activeOptions={{ exact: to === "/" }} className="flex min-h-12 items-center gap-3 rounded-md px-3 py-3 text-sm hover:bg-secondary data-[status=active]:bg-accent data-[status=active]:text-primary"><Icon className="size-5 shrink-0" /><span>{label}</span>{to === "/saved" && savedIds.length > 0 && <span className="ml-auto font-mono text-xs">{savedIds.length}</span>}</Link>
               ))}
+              <Button asChild variant="outline"><Link to="/submit-event" onClick={() => setMenuOpen(false)}>Submit an event</Link></Button><Button asChild variant="ghost"><Link to="/auth" onClick={() => setMenuOpen(false)}>{user ? "Your account" : "Sign in"}</Link></Button>
             </nav>
           </SheetContent>
         </Sheet>
