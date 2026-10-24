@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import type { Category } from "@/data/types";
 import { useSaved } from "@/lib/saved";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const CATEGORY_DOT: Record<Category, string> = {
   Technology: "bg-cat-technology",
@@ -41,20 +42,22 @@ export function SaveButton({ id, className }: { id: string; className?: string }
   const saved = isSaved(id);
   const Icon = saved ? BookmarkCheck : Bookmark;
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="sm"
       type="button"
       onClick={() => toggleSaved(id)}
       aria-pressed={saved}
       aria-label={saved ? "Remove from saved" : "Save item"}
       className={cn(
-        "inline-flex items-center gap-1.5 text-xs font-medium transition-colors",
+        "h-9 shrink-0 gap-1.5 px-2 text-xs font-medium",
         saved ? "text-primary" : "text-muted-foreground hover:text-foreground",
         className,
       )}
     >
       <Icon className={cn("h-4 w-4 transition-transform", saved && "scale-110")} />
       {saved ? "Saved" : "Save"}
-    </button>
+    </Button>
   );
 }
 
@@ -72,7 +75,7 @@ export function SectionHeading({ eyebrow, title, action }: { eyebrow: string; ti
 
 export function EmptyState({ title, body, action }: { title: string; body: string; action?: ReactNode }) {
   return (
-    <div className="border border-dashed px-6 py-16 text-center">
+    <div className="rounded-md border border-dashed px-6 py-16 text-center">
       <h3 className="text-2xl font-semibold">{title}</h3>
       <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">{body}</p>
       {action && <div className="mt-6">{action}</div>}
@@ -82,8 +85,8 @@ export function EmptyState({ title, body, action }: { title: string; body: strin
 
 export function PrimaryLink({ to, children }: { to: "/explore" | "/communities" | "/"; children: ReactNode }) {
   return (
-    <Link to={to} className="inline-flex items-center bg-foreground px-4 py-2 text-sm font-medium text-background hover:bg-primary">
+    <Button asChild><Link to={to}>
       {children}
-    </Link>
+    </Link></Button>
   );
 }

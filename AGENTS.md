@@ -14,3 +14,5 @@
 - Search/filter logic is pure functions in `src/lib/filters.ts` (tested), so it can move server-side later.
 - Saved state is one React context (`src/lib/saved.tsx`) mirrored to localStorage — keeps pages consistent with no backend in Round 1.
 - Never invent external/invite URLs; cards disable links unless `isValidUrl` passes.
+- Preserve public URLs; the shared AppShell owns six desktop destinations and four mobile tabs plus an accessible More sheet, so navigation remains consistent without crowding small screens.
+- Use the shared Button and semantic CSS tokens for controls; the internship entry route reuses existing sample records until its preparation-guide stage, avoiding fabricated vacancies or duplicated data.
