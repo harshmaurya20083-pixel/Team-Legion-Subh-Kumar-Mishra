@@ -46,7 +46,11 @@ export const adminQueue = createServerFn({ method: 'POST' }).middleware([require
   if (!admin) throw new Error('Administrator access required. No moderation records are available to this account.');
   const { data, error } = await context.supabase.from('event_records').select('*,event_contacts(contact_email)').order('created_at', { ascending: false });
   if (error) throw new Error('Could not load moderation queue');
-  return data ?? [];
+  return (data ?? []).map(row => {
+    const parsed = storedEventSchema.safeParse(row.event);
+    const recorded = z.array(duplicateSchema).safeParse(row.duplicate_matches);
+    return { ...row, duplicate_matches: [...(recorded.success ? recorded.data : []), ...(parsed.success ? fixtureDuplicates(parsed.data, events) : [])] };
+  });
 });
 export const moderateEvent = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).inputValidator(v => moderationSchema.parse(v)).handler(async ({ data, context }) => {
   const { data: admin } = await context.supabase.rpc('has_role', { _user_id: context.userId, _role: 'admin' });

@@ -30,7 +30,7 @@ export const duplicateSchema = z.object({ id: z.string(), title: z.string(), dat
 export type Duplicate = z.infer<typeof duplicateSchema>;
 export const normalizeTitle = (v: string) => v.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 export const normalizeUrl = (v?: string) => (v ?? '').trim().split('#')[0]?.replace(/\/$/, '') ?? '';
-export function fixtureDuplicates(input: SubmissionInput, fixtures: DiscoveryEvent[]): Duplicate[] {
+export function fixtureDuplicates(input: Pick<SubmissionInput, 'title' | 'organizer' | 'date' | 'city' | 'sourceUrl' | 'registrationUrl'>, fixtures: DiscoveryEvent[]): Duplicate[] {
   return fixtures.flatMap(e => {
     const urlMatch = [input.sourceUrl, input.registrationUrl].some(a => Boolean(normalizeUrl(a)) && [e.sourceUrl, e.registrationUrl].some(b => normalizeUrl(a) === normalizeUrl(b)));
     const a = normalizeTitle(input.title), b = normalizeTitle(e.title);

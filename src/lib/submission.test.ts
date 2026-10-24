@@ -6,6 +6,7 @@ describe('Event submission rules', () => {
   it('accepts a complete future event', () => expect(submissionSchema.safeParse(input).success).toBe(true));
   it('rejects non-http registration URLs', () => expect(submissionSchema.safeParse({ ...input, registrationUrl: 'javascript:alert(1)' }).success).toBe(false));
   it('rejects invalid emails', () => expect(submissionSchema.safeParse({ ...input, contactEmail: 'invalid' }).success).toBe(false));
+  it('requires time and activity in schedule entries', () => expect(submissionSchema.safeParse({ ...input, scheduleText: 'No separator' }).success).toBe(false));
   it('rejects a deadline after the event', () => expect(submissionSchema.safeParse({ ...input, registrationDeadline: '2099-11-02' }).success).toBe(false));
   it('rejects an end date before the start', () => expect(submissionSchema.safeParse({ ...input, endDate: '2099-10-31' }).success).toBe(false));
   it('detects normalized titles with matching organizer date city', () => { const e = events[0]; if (!e) throw new Error('No fixture'); expect(fixtureDuplicates({ ...input, title: e.title.toUpperCase() + '!', organizer: e.organizer, date: e.date, city: e.city }, events).map(m => m.id)).toContain(e.id); });
