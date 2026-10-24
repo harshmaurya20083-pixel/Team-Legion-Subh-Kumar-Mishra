@@ -149,6 +149,76 @@ export type Database = {
           },
         ]
       }
+      user_marks: {
+        Row: {
+          item_id: string
+          kind: string
+          user_id: string
+        }
+        Insert: {
+          item_id: string
+          kind: string
+          user_id: string
+        }
+        Update: {
+          item_id?: string
+          kind?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_marks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_preferences: {
+        Row: {
+          categories: string[]
+          date_from: string
+          date_until: string
+          formats: string[]
+          interests: string[]
+          internship_roles: string[]
+          location: string
+          user_id: string
+          work_formats: string[]
+        }
+        Insert: {
+          categories?: string[]
+          date_from?: string
+          date_until?: string
+          formats?: string[]
+          interests?: string[]
+          internship_roles?: string[]
+          location?: string
+          user_id: string
+          work_formats?: string[]
+        }
+        Update: {
+          categories?: string[]
+          date_from?: string
+          date_until?: string
+          formats?: string[]
+          interests?: string[]
+          internship_roles?: string[]
+          location?: string
+          user_id?: string
+          work_formats?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           role: Database["public"]["Enums"]["app_role"]

@@ -1,65 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { CATEGORIES, CONTENT_TYPES } from "@/data/types";
-
-export const Route = createFileRoute("/preferences")({
-  head: () => ({
-    meta: [
-      { title: "Preferences — MyWorld" },
-      { name: "description", content: "A preview of how MyWorld will adapt to your interests and goals." },
-      { property: "og:title", content: "Preferences — MyWorld" },
-      { property: "og:description", content: "Coming soon: a feed shaped by your interests." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
-  component: Preferences,
-});
-
-const GOALS = ["Land an internship", "Learn to code", "Start a side project", "Meet people nearby"];
-
-function Preview({ title, items }: { title: string; items: readonly string[] }) {
-  return (
-    <div className="border bg-card p-5">
-      <p className="eyebrow mb-3 text-muted-foreground">{title}</p>
-      <div className="flex flex-wrap gap-1.5">
-        {items.map((i) => (
-          <span key={i} className="border px-2.5 py-1 text-xs text-muted-foreground">{i}</span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function Preferences() {
-  return (
-    <div className="space-y-10">
-      <header className="max-w-2xl">
-        <p className="eyebrow text-primary">Coming in Round 2</p>
-        <h1 className="mt-2 text-4xl font-semibold md:text-5xl">A feed that knows what you care about.</h1>
-        <p className="mt-4 text-muted-foreground">
-          Right now everyone sees the same sample feed — nothing is personalised yet. In the next
-          round, you'll be able to tell MyWorld your interests, goals and preferred kinds of content,
-          and your feed will be arranged around them.
-        </p>
-      </header>
-
-      <section>
-        <div className="mb-4 flex items-center gap-3">
-          <h2 className="text-2xl font-semibold">Preview</h2>
-          <span className="eyebrow border border-sample px-1.5 py-0.5 text-[0.6rem]">Not active</span>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Preview title="Interests" items={CATEGORIES} />
-          <Preview title="Learning goals" items={GOALS} />
-          <Preview title="Preferred content" items={CONTENT_TYPES} />
-          <div className="border bg-card p-5">
-            <p className="eyebrow mb-3 text-muted-foreground">Location</p>
-            <p className="text-sm text-muted-foreground">
-              Optional, city-level only — used to surface nearby events. We'll never ask for more than you need.
-            </p>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
+import {createFileRoute,Link} from '@tanstack/react-router';
+import {useEffect,useState} from 'react';
+import {usePersonal} from '@/lib/personal';
+import {useAccount} from '@/lib/account';
+import {defaultPreferences,type Preferences,preferencesSchema} from '@/lib/personalization';
+import {EVENT_CATEGORIES,EVENT_FORMATS} from '@/data/types';
+import {FilterGroup} from '@/components/FilterGroup';
+import {Button} from '@/components/ui/button';
+import {Input} from '@/components/ui/input';
+import {toggleValue} from '@/lib/filters';
+export const Route=createFileRoute('/preferences')({head:()=>({meta:[{title:'Preferences — MyWorld'},{name:'description',content:'Choose interests, event locations and formats for transparent MyWorld recommendations.'},{property:'og:title',content:'Preferences — MyWorld'},{property:'og:description',content:'Shape your event recommendations and internship discovery.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:Page});
+function Page(){const {state,ready,busy,save}=usePersonal();const {user}=useAccount();const [draft,setDraft]=useState<Preferences>(defaultPreferences),[message,setMessage]=useState('');const [custom,setCustom]=useState('');useEffect(()=>{if(ready)setDraft(state.preferences);},[state.preferences,ready]);
+const toggle=(key:'interests'|'categories'|'formats'|'internshipRoles'|'workFormats',v:string)=>{setDraft(p=>({...p,[key]:toggleValue(p[key],v)}));setMessage('');};
+return <div className="max-w-3xl space-y-8"><header className="border-b pb-6"><p className="eyebrow text-primary">Your choices</p><h1 className="mt-2 text-4xl md:text-5xl">Preferences</h1><p className="mt-3 text-sm text-muted-foreground">{user?'Saved to your account.':'Stored in this browser. Sign in to save preferences to your account.'}</p>{!user&&<Button asChild variant="link"><Link to="/auth">Sign in</Link></Button>}</header>{!ready?<p role="status">Loading preferences…</p>:<form className="space-y-7" onSubmit={async e=>{e.preventDefault();const p=preferencesSchema.safeParse(draft);if(!p.success){setMessage(p.error.issues[0]?.message??'Check your preferences');return;}if(await save(p.data))setMessage('Preferences saved. Your recommendations have been updated.');}}><FilterGroup label="Interests" options={[...new Set(['web development','React','JavaScript','Python','design','research','business','accessibility',...draft.interests])]} selected={draft.interests} onToggle={v=>toggle('interests',v)}/><div className="flex items-end gap-2"><label className="flex-1 text-sm">Another interest<Input aria-label="Another interest" value={custom} maxLength={100} onChange={e=>setCustom(e.target.value)} className="mt-2"/></label><Button type="button" variant="outline" disabled={!custom.trim()||draft.interests.length>=30} onClick={()=>{if(!draft.interests.includes(custom.trim()))toggle('interests',custom.trim());setCustom('');}}>Add</Button></div><label className="block text-sm">City or campus<Input value={draft.location} maxLength={100} placeholder="Austin, Boston, Seattle or Virtual" aria-label="Preferred location" onChange={e=>setDraft(p=>({...p,location:e.target.value}))} className="mt-2"/></label><FilterGroup label="Event categories" options={EVENT_CATEGORIES} selected={draft.categories} onToggle={v=>toggle('categories',v)}/><FilterGroup label="Event format" options={EVENT_FORMATS} selected={draft.formats} onToggle={v=>toggle('formats',v)}/><div className="grid gap-5 sm:grid-cols-2"><label className="text-sm">Events from<Input type="date" value={draft.from} onChange={e=>setDraft(p=>({...p,from:e.target.value}))} className="mt-2"/></label><label className="text-sm">Events through<Input type="date" value={draft.until} onChange={e=>setDraft(p=>({...p,until:e.target.value}))} className="mt-2"/></label></div><fieldset className="space-y-6 border-t pt-6"><legend className="text-2xl font-display">Internship preferences</legend><FilterGroup label="Role areas" options={['Web development','Research','Product']} selected={draft.internshipRoles} onToggle={v=>toggle('internshipRoles',v)}/><FilterGroup label="Work format" options={['In-person','Remote','Hybrid']} selected={draft.workFormats} onToggle={v=>toggle('workFormats',v)}/></fieldset><div className="flex gap-3"><Button disabled={busy}>Save preferences</Button><Button type="button" variant="outline" disabled={busy} onClick={()=>{setDraft(defaultPreferences);setMessage('Preferences cleared in the form. Save to apply.');}}>Reset preferences</Button></div>{message&&<p role="status" className="text-sm text-primary">{message}</p>}</form>}</div>;}

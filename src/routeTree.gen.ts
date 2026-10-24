@@ -22,6 +22,7 @@ import { Route as SavedRouteImport } from './routes/saved'
 import { Route as SubmitEventRouteImport } from './routes/submit-event'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as EventsIdRouteImport } from './routes/events.$id'
+import { Route as InternshipsIdRouteImport } from './routes/internships_.$id'
 import { Route as ItemIdRouteImport } from './routes/item.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -88,6 +89,11 @@ const EventsIdRoute = EventsIdRouteImport.update({
   path: '/events/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InternshipsIdRoute = InternshipsIdRouteImport.update({
+  id: '/internships_/$id',
+  path: '/internships/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ItemIdRoute = ItemIdRouteImport.update({
   id: '/item/$id',
   path: '/item/$id',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/submit-event': typeof SubmitEventRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/events/$id': typeof EventsIdRoute
+  '/internships/$id': typeof InternshipsIdRoute
   '/item/$id': typeof ItemIdRoute
 }
 export interface FileRoutesByTo {
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/submit-event': typeof SubmitEventRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/events/$id': typeof EventsIdRoute
+  '/internships/$id': typeof InternshipsIdRoute
   '/item/$id': typeof ItemIdRoute
 }
 export interface FileRoutesById {
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/submit-event': typeof SubmitEventRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/events/$id': typeof EventsIdRoute
+  '/internships_/$id': typeof InternshipsIdRoute
   '/item/$id': typeof ItemIdRoute
 }
 export interface FileRouteTypes {
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/submit-event'
     | '/admin'
     | '/events/$id'
+    | '/internships/$id'
     | '/item/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/submit-event'
     | '/admin'
     | '/events/$id'
+    | '/internships/$id'
     | '/item/$id'
   id:
     | '__root__'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/submit-event'
     | '/_authenticated/admin'
     | '/events/$id'
+    | '/internships_/$id'
     | '/item/$id'
   fileRoutesById: FileRoutesById
 }
@@ -203,6 +215,7 @@ export interface RootRouteChildren {
   SavedRoute: typeof SavedRoute
   SubmitEventRoute: typeof SubmitEventRoute
   EventsIdRoute: typeof EventsIdRoute
+  InternshipsIdRoute: typeof InternshipsIdRoute
   ItemIdRoute: typeof ItemIdRoute
 }
 
@@ -299,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/internships_/$id': {
+      id: '/internships_/$id'
+      path: '/internships/$id'
+      fullPath: '/internships/$id'
+      preLoaderRoute: typeof InternshipsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/item/$id': {
       id: '/item/$id'
       path: '/item/$id'
@@ -333,6 +353,7 @@ const rootRouteChildren: RootRouteChildren = {
   SavedRoute: SavedRoute,
   SubmitEventRoute: SubmitEventRoute,
   EventsIdRoute: EventsIdRoute,
+  InternshipsIdRoute: InternshipsIdRoute,
   ItemIdRoute: ItemIdRoute,
 }
 export const routeTree = rootRouteImport

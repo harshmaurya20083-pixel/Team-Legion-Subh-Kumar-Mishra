@@ -4,6 +4,7 @@ import { publicEventsOptions, usePublicEvents } from "@/lib/event-query";
 import { Button } from "@/components/ui/button";
 import { SampleBadge, SaveButton, EmptyState } from "@/components/bits";
 import { canRegister, formatDate, isValidUrl } from "@/lib/filters";
+import { EventCard } from "@/components/EventCard";
 import workshopImage from "@/assets/student-workshop.jpg";
 
 export const Route = createFileRoute("/events/$id")({
@@ -22,6 +23,7 @@ function EventDetails() {
   const { id } = Route.useParams();
   const event = events.find((item) => item.id === id && item.status === "published" && item.reviewStatus === "approved");
   if (!event) return <EmptyState title="Event unavailable" body="This event may no longer be available." action={<Button asChild><Link to="/explore">Explore Events</Link></Button>} />;
+  const related = events.filter(e=>e.id!==event.id&&e.organizer===event.organizer&&e.endDate>=new Date().toISOString().slice(0,10));
   const register = canRegister(event, new Date().toISOString().slice(0, 10));
   return (
     <div className="space-y-8">
@@ -51,6 +53,7 @@ function EventDetails() {
           <div className="border-t pt-5"><p className="eyebrow mb-2 text-muted-foreground">Source</p><p className="text-sm">{event.sourceName}</p><p className="mt-2 text-xs text-muted-foreground">Updated {formatDate(event.updatedAt)}</p>{!event.isSample && isValidUrl(event.sourceUrl) && <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm text-primary">Official event source</a>}</div>
         </aside>
       </div>
+      {related.length>0&&<section className="border-t pt-6"><h2 className="mb-5 text-2xl">More from {event.organizer}</h2><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{related.map(e=><EventCard key={e.id} event={e}/>)}</div></section>}
     </div>
   );
 }

@@ -4,6 +4,6 @@
 - [x] Round 2 Priority 2 — eight labelled sample events, dedicated discovery/details, URL-backed location/interest/date filters, sorting, and saved events; verified desktop/mobile flows and preserved resource discovery
 - [x] Round 2 Priority 3 — secure event submissions, deterministic duplicate review, profiles, protected admin moderation and shared persistence; validated submission → pending → approval → public discovery → saved flow with temporary QA accounts
 - [ ] Activate the owner’s administrator account — waiting for the owner to sign up and identify the account for role assignment
-- [ ] Round 2 Priority 4 — persistent preferences, recommendations, community follows — deferred until requested
-- [ ] Round 2 Priority 5 — internship preparation guide and checklist — deferred until requested
-- [ ] Round 2 Priority 6 — animations, accessibility polish, final responsive testing — deferred until requested
+- [x] Round 2 Priority 4 — account-backed preferences and saves, explained event recommendations, community follows/unfollows and related events; verified reload and fresh-browser persistence plus legacy save import
+- [x] Round 2 Priority 5 — three explicitly illustrative internship listings/details, requirement-mapped sample resources and preparation ideas, explained alternatives and persistent checklists; real vacancy sources remain unavailable
+- [x] Round 2 Priority 6 — targeted control/progress transitions with reduced motion, desktop/mobile checks, empty/error states, failed-write recovery and moderation regression; 33 rule tests passed
