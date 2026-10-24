@@ -1,5 +1,6 @@
 // A labelled set of toggle chips. Selecting nothing means "show all".
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   label: string;
@@ -16,20 +17,22 @@ export function FilterGroup({ label, options, selected, onToggle }: Props) {
         {options.map((opt) => {
           const active = selected.includes(opt);
           return (
-            <button
+            <Button
+              variant="outline"
+              size="sm"
               key={opt}
               type="button"
               aria-pressed={active}
               onClick={() => onToggle(opt)}
               className={cn(
-                "border px-2.5 py-1 text-xs transition-colors",
+                "h-auto min-h-9 px-2.5 py-1 text-xs",
                 active
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-primary bg-accent text-accent-foreground"
                   : "bg-card hover:border-foreground",
               )}
             >
               {opt}
-            </button>
+            </Button>
           );
         })}
       </div>

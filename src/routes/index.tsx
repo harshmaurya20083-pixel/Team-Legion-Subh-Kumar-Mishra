@@ -8,6 +8,10 @@ import { communities } from "@/data/communities";
 import { informationItems } from "@/data/information";
 import { CATEGORIES } from "@/data/types";
 import { Button } from "@/components/ui/button";
+import { events } from "@/data/events";
+import { EventCard } from "@/components/EventCard";
+import { EVENT_CATEGORIES } from "@/data/types";
+import { filterEvents } from "@/lib/filters";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +34,7 @@ function Home() {
   const [featured, ...rest] = byDate;
   const grid = rest.slice(0, 4);
   const recent = rest.slice(4, 9);
+  const upcoming = filterEvents(events, { query: "", categories: [], formats: [], locations: [], skills: [], eligibility: [], organizers: [], from: "", until: "", sort: "upcoming" }, new Date().toISOString().slice(0, 10));
 
   return (
     <div className="space-y-14">
@@ -64,6 +69,8 @@ function Home() {
         <Link to="/internships" className="inline-flex items-center gap-2 text-sm text-primary hover:underline"><BriefcaseBusiness className="size-4" />Internship Opportunities<ArrowRight className="size-4" /></Link>
       </section>
 
+      <section><SectionHeading eyebrow="Sample event edition" title="Coming up next" action={<Link to="/explore" className="text-sm text-primary">Explore Events</Link>} /><div className="mb-5 flex flex-wrap gap-2">{EVENT_CATEGORIES.map((category) => <Button key={category} asChild variant="outline" size="sm"><Link to="/explore" search={{ category }}>{category}</Link></Button>)}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{upcoming.slice(0, 3).map((event) => <EventCard key={event.id} event={event} />)}</div></section>
+
       {featured && <InfoCard item={featured} variant="featured" />}
 
       {/* Topics */}
@@ -75,7 +82,7 @@ function Home() {
             return (
               <Link
                 key={c}
-                to="/explore"
+                 to="/resources"
                 search={{ category: c }}
                 className="group bg-background p-4 transition-colors hover:bg-foreground hover:text-background"
               >
@@ -95,7 +102,7 @@ function Home() {
           <SectionHeading
             eyebrow="The feed"
             title="Worth your time"
-            action={<Link to="/explore" className="text-sm text-primary hover:underline">See all</Link>}
+            action={<Link to="/resources" className="text-sm text-primary hover:underline">See all</Link>}
           />
           <div className="grid gap-4 sm:grid-cols-2">
             {grid.map((item) => (

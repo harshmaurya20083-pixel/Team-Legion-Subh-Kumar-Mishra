@@ -20,7 +20,10 @@ export function SavedProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setSavedIds(JSON.parse(raw));
+      if (raw) {
+        const parsed: unknown = JSON.parse(raw);
+        if (Array.isArray(parsed)) setSavedIds([...new Set(parsed.filter((id): id is string => typeof id === "string"))]);
+      }
     } catch {
       /* ignore broken storage */
     }
@@ -28,7 +31,9 @@ export function SavedProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (loaded) localStorage.setItem(STORAGE_KEY, JSON.stringify(savedIds));
+    if (loaded) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(savedIds)); } catch { /* saving still works for this session when browser storage is unavailable */ }
+    }
   }, [savedIds, loaded]);
 
   const toggleSaved = (id: string) =>

@@ -3,6 +3,8 @@ import { InfoCard } from "@/components/InfoCard";
 import { EmptyState, PrimaryLink } from "@/components/bits";
 import { informationItems } from "@/data/information";
 import { useSaved } from "@/lib/saved";
+import { events } from "@/data/events";
+import { EventCard } from "@/components/EventCard";
 
 export const Route = createFileRoute("/saved")({
   head: () => ({
@@ -21,6 +23,7 @@ export const Route = createFileRoute("/saved")({
 function Saved() {
   const { savedIds } = useSaved();
   const items = informationItems.filter((i) => savedIds.includes(i.id));
+  const savedEvents = events.filter((event) => savedIds.includes(event.id) && event.status === "published" && event.reviewStatus === "approved");
 
   return (
     <div className="space-y-8">
@@ -29,17 +32,20 @@ function Saved() {
         <h1 className="text-4xl font-semibold md:text-5xl">Saved for later</h1>
         <p className="mt-2 text-sm text-muted-foreground">Stored in this browser only.</p>
       </header>
-      {items.length === 0 ? (
+      {items.length === 0 && savedEvents.length === 0 ? (
         <EmptyState
           title="Nothing saved yet"
           body="Tap Save on anything in your feed or in Explore and it will show up here."
           action={<PrimaryLink to="/explore">Go to Explore</PrimaryLink>}
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="space-y-10">
+          {savedEvents.length > 0 && <section><h2 className="mb-5 text-2xl font-semibold">Saved events</h2><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{savedEvents.map((event) => <EventCard key={event.id} event={event} />)}</div></section>}
+          {items.length > 0 && <section><h2 className="mb-5 text-2xl font-semibold">Resources & opportunities</h2><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item) => (
             <InfoCard key={item.id} item={item} />
           ))}
+          </div></section>}
         </div>
       )}
     </div>
