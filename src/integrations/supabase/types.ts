@@ -14,16 +14,171 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      event_contacts: {
+        Row: {
+          contact_email: string
+          event_id: string
+        }
+        Insert: {
+          contact_email: string
+          event_id: string
+        }
+        Update: {
+          contact_email?: string
+          event_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_contacts_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: true
+            referencedRelation: "event_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_records: {
+        Row: {
+          created_at: string
+          duplicate_matches: Json
+          event: Json
+          id: string
+          review_reason: string
+          reviewed_at: string | null
+          reviewer_id: string | null
+          status: string
+          submitter_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          duplicate_matches?: Json
+          event: Json
+          id?: string
+          review_reason?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+          submitter_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          duplicate_matches?: Json
+          event?: Json
+          id?: string
+          review_reason?: string
+          reviewed_at?: string | null
+          reviewer_id?: string | null
+          status?: string
+          submitter_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      event_review_history: {
+        Row: {
+          action: string
+          created_at: string
+          event_id: string | null
+          id: string
+          reason: string
+          reviewer_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          reason?: string
+          reviewer_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          reason?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_review_history_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          display_name: string
+          id: string
+        }
+        Insert: {
+          display_name?: string
+          id: string
+        }
+        Update: {
+          display_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      published_event_urls: {
+        Row: {
+          event_id: string | null
+          url: string
+        }
+        Insert: {
+          event_id?: string | null
+          url: string
+        }
+        Update: {
+          event_id?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "published_event_urls_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "event_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +305,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
