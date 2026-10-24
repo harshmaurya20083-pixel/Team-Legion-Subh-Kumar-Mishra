@@ -1,35 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { BriefcaseBusiness } from "lucide-react";
-import { InfoCard } from "@/components/InfoCard";
-import { EmptyState } from "@/components/bits";
-import { informationItems } from "@/data/information";
-
-export const Route = createFileRoute("/internships")({
-  head: () => ({
-    meta: [
-      { title: "Internship Opportunities — MyWorld" },
-      { name: "description", content: "Explore MyWorld's clearly labelled sample internship opportunities. The application preparation guide is planned for a later stage." },
-      { property: "og:title", content: "Internship Opportunities — MyWorld" },
-      { property: "og:description", content: "A separate space for student internship opportunities, starting with clearly labelled sample listings." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
-  component: Internships,
-});
-
-function Internships() {
-  const items = informationItems.filter((item) => item.contentType === "Opportunities" && /internship/i.test(`${item.title} ${item.tags.join(" ")}`));
-  return (
-    <div className="space-y-8">
-      <header className="max-w-2xl border-b pb-7">
-        <p className="eyebrow flex items-center gap-2 text-primary"><BriefcaseBusiness className="size-4" /> Student opportunities</p>
-        <h1 className="mt-3 text-4xl font-semibold md:text-5xl">Internship Opportunities</h1>
-        <p className="mt-4 leading-relaxed text-muted-foreground">Sample listings only — these are not live vacancies. Employer requirements, preparation resources and application checklists will be added in a later stage.</p>
-      </header>
-      {items.length ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{items.map((item) => <InfoCard key={item.id} item={item} />)}</div>
-      ) : <EmptyState title="No internship listings yet" body="Internship opportunities will appear here when available." />}
-    </div>
-  );
-}
+import {createFileRoute} from '@tanstack/react-router';
+import {useState} from 'react';
+import {internships} from '@/data/internships';
+import {filterInternships,internshipReasons} from '@/lib/internships';
+import {usePersonal} from '@/lib/personal';
+import {FilterGroup,SearchInput} from '@/components/FilterGroup';
+import {Button} from '@/components/ui/button';
+import {EmptyState} from '@/components/bits';
+import {InternshipCard} from '@/components/InternshipCard';
+import {toggleValue} from '@/lib/filters';
+export const Route=createFileRoute('/internships')({head:()=>({meta:[{title:'Internship Opportunities — MyWorld'},{name:'description',content:'Explore clearly labelled sample internships and requirement-mapped preparation guides.'},{property:'og:title',content:'Internship Opportunities — MyWorld'},{property:'og:description',content:'Sample internship discovery and practical preparation, without assessments or selection predictions.'},{property:'og:type',content:'website'},{name:'twitter:card',content:'summary'}]}),component:Page});
+function Page(){const {state}=usePersonal();const [query,setQuery]=useState(''),[roles,setRoles]=useState<string[]>([]),[locations,setLocations]=useState<string[]>([]),[formats,setFormats]=useState<string[]>([]);const results=filterInternships(internships,{query,roles,locations,formats});const reset=()=>{setQuery('');setRoles([]);setLocations([]);setFormats([]);};return <div className="space-y-7"><header className="border-b pb-6"><p className="eyebrow text-primary">Student opportunities</p><h1 className="mt-2 text-4xl md:text-5xl">Internship Opportunities</h1><p className="mt-3 max-w-2xl text-sm text-muted-foreground">All listings, employers and requirements here are Sample. They are not real vacancies; application links are disabled. Preparation guides are suggestions, not assessments.</p></header><SearchInput value={query} onChange={setQuery} placeholder="Search internships…"/><div className="grid gap-6 border-b pb-6 md:grid-cols-3"><FilterGroup label="Role" options={[...new Set(internships.map(i=>i.role))]} selected={roles} onToggle={v=>setRoles(toggleValue(roles,v))}/><FilterGroup label="Location" options={[...new Set(internships.map(i=>i.location))]} selected={locations} onToggle={v=>setLocations(toggleValue(locations,v))}/><FilterGroup label="Work format" options={['In-person','Remote','Hybrid']} selected={formats} onToggle={v=>setFormats(toggleValue(formats,v))}/></div><div className="flex items-center justify-between"><p role="status" className="font-mono text-sm">{results.length} {results.length===1?'internship':'internships'}</p>{(query||roles.length||locations.length||formats.length)?<Button variant="link" onClick={reset}>Reset Filters</Button>:null}</div>{results.length?<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{results.map(i=><InternshipCard key={i.id} item={i} reasons={internshipReasons(i,state.preferences)}/>)}</div>:<EmptyState title="No internships match" body="Try another role, city or work format." action={<Button onClick={reset}>Reset Filters</Button>}/>}</div>;}

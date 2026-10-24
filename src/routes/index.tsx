@@ -12,6 +12,8 @@ import { publicEventsOptions, usePublicEvents } from "@/lib/event-query";
 import { EventCard } from "@/components/EventCard";
 import { EVENT_CATEGORIES } from "@/data/types";
 import { filterEvents } from "@/lib/filters";
+import { usePersonal } from "@/lib/personal";
+import { recommendEvents } from "@/lib/personalization";
 
 export const Route = createFileRoute("/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(publicEventsOptions),
@@ -30,6 +32,8 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const events = usePublicEvents();
+  const { state, ready } = usePersonal();
+  const recommendations = recommendEvents(events, state.preferences, new Date().toISOString().slice(0,10));
   const navigate = useNavigate();
   const [q, setQ] = useState("");
   const byDate = [...informationItems].sort((a, b) => b.date.localeCompare(a.date));
@@ -72,6 +76,8 @@ function Home() {
       </section>
 
       <section><SectionHeading eyebrow="Reviewed events · Labelled samples" title="Coming up next" action={<Link to="/explore" className="text-sm text-primary">Explore Events</Link>} /><div className="mb-5 flex flex-wrap gap-2">{EVENT_CATEGORIES.map((category) => <Button key={category} asChild variant="outline" size="sm"><Link to="/explore" search={{ category }}>{category}</Link></Button>)}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{upcoming.slice(0, 3).map((event) => <EventCard key={event.id} event={event} />)}</div></section>
+
+      <section><SectionHeading eyebrow="Based on your choices" title="For you" action={<Link to="/preferences" className="text-sm text-primary">Edit preferences</Link>} />{!ready ? <p role="status">Loading your recommendations…</p> : recommendations.length ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{recommendations.slice(0,6).map(({event,reasons})=><div key={event.id} className="space-y-3"><EventCard event={event}/><ul className="space-y-1 text-xs text-primary">{reasons.map(r=><li key={r}>{r}</li>)}</ul></div>)}</div> : <p className="text-sm text-muted-foreground">No preference matches yet. Choose interests or a location in Preferences, or explore all events.</p>}</section>
 
       {featured && <InfoCard item={featured} variant="featured" />}
 
