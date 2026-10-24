@@ -9,14 +9,14 @@ import { filterInformation, toggleValue } from "@/lib/filters";
 
 // The URL can carry a starting search (?q=) or topic (?category=) from other pages.
 interface ExploreSearch {
-  q?: string;
-  category?: string;
+  q?: string | undefined;
+  category?: string | undefined;
 }
 
 export const Route = createFileRoute("/explore")({
   validateSearch: (s: Record<string, unknown>): ExploreSearch => ({
-    q: typeof s.q === "string" ? s.q : undefined,
-    category: typeof s.category === "string" ? s.category : undefined,
+    q: typeof s["q"] === "string" ? s["q"] : undefined,
+    category: typeof s["category"] === "string" ? s["category"] : undefined,
   }),
   head: () => ({
     meta: [
