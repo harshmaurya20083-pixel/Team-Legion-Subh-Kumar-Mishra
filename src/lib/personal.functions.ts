@@ -3,9 +3,11 @@ import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 import { defaultPreferences, markSchema, preferencesSchema } from './personalization';
 import { z } from 'zod';
 export const loadPersonal = createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).handler(async({context})=>{
-  const [p,m]=await Promise.all([context.supabase.from('user_preferences').select('*').eq('user_id',context.userId).maybeSingle(),context.supabase.from('user_marks').select('kind,item_id').eq('user_id',context.userId)]);
-  if(p.error||m.error)throw new Error('Could not load your preferences and saved items.');
-  const r=p.data; return {preferences:r?preferencesSchema.parse({interests:r.interests,location:r.location,categories:r.categories,formats:r.formats,from:r.date_from,until:r.date_until,internshipRoles:r.internship_roles,workFormats:r.work_formats}):defaultPreferences,marks:z.array(z.object({kind:z.enum(['saved','follow','checklist']),id:z.string()})).parse((m.data??[]).map(v=>({kind:v.kind,id:v.item_id})))};
+  const p=await context.supabase.from('user_preferences').select('*').eq('user_id',context.userId).maybeSingle();
+  if(p.error)throw new Error('Could not load your preferences and saved items.');
+  const marks:{kind:string;id:string}[]=[];
+  for(let offset=0;;offset+=500){const m=await context.supabase.from('user_marks').select('kind,item_id').eq('user_id',context.userId).order('kind').order('item_id').range(offset,offset+499);if(m.error)throw new Error('Could not load your saved items.');marks.push(...(m.data??[]).map(v=>({kind:v.kind,id:v.item_id})));if(!m.data||m.data.length<500)break;}
+  const r=p.data; return {preferences:r?preferencesSchema.parse({interests:r.interests,location:r.location,categories:r.categories,formats:r.formats,from:r.date_from,until:r.date_until,internshipRoles:r.internship_roles,workFormats:r.work_formats}):defaultPreferences,marks:z.array(z.object({kind:z.enum(['saved','follow','checklist']),id:z.string()})).parse(marks)};
 });
 export const savePreferences=createServerFn({method:'POST'}).middleware([requireSupabaseAuth]).inputValidator(v=>preferencesSchema.parse(v)).handler(async({data,context})=>{
   const {error}=await context.supabase.from('user_preferences').upsert({user_id:context.userId,interests:data.interests,location:data.location,categories:data.categories,formats:data.formats,date_from:data.from,date_until:data.until,internship_roles:data.internshipRoles,work_formats:data.workFormats}); if(error)throw new Error('Preferences were not saved. Please try again.'); return data;
