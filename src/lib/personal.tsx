@@ -1,0 +1,25 @@
+import {createContext,useContext,useEffect,useRef,useState,type ReactNode} from 'react';
+import {useServerFn} from '@tanstack/react-start';
+import {useQuery,useQueryClient} from '@tanstack/react-query';
+import {useAccount} from './account';
+import {loadPersonal,savePreferences,setPersonalMark} from './personal.functions';
+import {defaultPreferences,markSchema,preferencesSchema,type Preferences,type Mark} from './personalization';
+import {z} from 'zod';
+type State={preferences:Preferences;marks:Mark[]};
+const empty:State={preferences:defaultPreferences,marks:[]};
+const Context=createContext<{state:State;ready:boolean;error:string;busy:boolean;toggle:(kind:Mark['kind'],id:string)=>Promise<void>;save:(p:Preferences)=>Promise<boolean>;retry:()=>void}|null>(null);
+export function PersonalProvider({children}:{children:ReactNode}){
+  const {user,ready:accountReady}=useAccount(); const qc=useQueryClient(); const load=useServerFn(loadPersonal),persist=useServerFn(savePreferences),mark=useServerFn(setPersonalMark);
+  const [guest,setGuest]=useState<State>(empty),[loaded,setLoaded]=useState(false),[error,setError]=useState(''),[busy,setBusy]=useState(false); const locks=useRef(new Set<string>()); const currentUser=useRef(user?.id); currentUser.current=user?.id;
+  const key=['personal',user?.id]; const query=useQuery({queryKey:key,queryFn:()=>load(),enabled:accountReady&&Boolean(user),retry:false});
+  useEffect(()=>{try{const raw=localStorage.getItem('myworld:personal');if(raw){const p=JSON.parse(raw);const prefs=preferencesSchema.safeParse(p.preferences);const marks=z.array(z.object({kind:z.enum(['saved','follow','checklist']),id:z.string().max(200)})).safeParse(p.marks);if(prefs.success&&marks.success)setGuest({preferences:prefs.data,marks:marks.data});}const old=JSON.parse(localStorage.getItem('myworld:saved')??'[]');if(Array.isArray(old))setGuest(p=>({...p,marks:[...p.marks,...old.filter(id=>typeof id==='string'&&markSchema.safeParse({kind:'saved',id,enabled:true}).success).map(id=>({kind:'saved' as const,id}))].filter((v,i,a)=>a.findIndex(x=>x.kind===v.kind&&x.id===v.id)===i)}));}catch{/* retain session defaults */}setLoaded(true);},[]);
+  useEffect(()=>{if(!loaded)return;try{localStorage.setItem('myworld:personal',JSON.stringify(guest));localStorage.setItem('myworld:saved',JSON.stringify(guest.marks.filter(m=>m.kind==='saved').map(m=>m.id)));}catch{/* session storage remains available */}},[guest,loaded]);
+  useEffect(()=>{setError('');},[user?.id]);
+  const importing=useRef(false);
+  useEffect(()=>{if(!user||!query.data||!loaded||importing.current)return;const id=user.id;const saved=guest.marks.filter(m=>m.kind==='saved');if(!saved.length)return;importing.current=true;void(async()=>{try{for(const m of saved)await mark({data:{...m,enabled:true}});if(currentUser.current===id){setGuest(p=>({...p,marks:p.marks.filter(m=>m.kind!=='saved')}));await qc.invalidateQueries({queryKey:['personal',id]});}}catch{setError('Browser saves could not be synced. They remain stored in this browser.');}finally{importing.current=false;}})();},[user,query.data,guest.marks,loaded,mark,qc]);
+  const state=user?(query.data??empty):guest; const ready=accountReady&&loaded&&(!user||query.isSuccess);
+  async function toggle(kind:Mark['kind'],id:string){const k=`${kind}:${id}`;if(!ready||locks.current.has(k))return;const parsed=markSchema.safeParse({kind,id,enabled:!state.marks.some(m=>m.kind===kind&&m.id===id)});if(!parsed.success)return;locks.current.add(k);setBusy(true);setError('');const owner=user?.id;try{if(owner){await mark({data:parsed.data});if(currentUser.current===owner)qc.setQueryData<State>(['personal',owner],p=>p?({...p,marks:parsed.data.enabled?[...p.marks,{kind,id}]:p.marks.filter(m=>m.kind!==kind||m.id!==id)}):p);}else setGuest(p=>({...p,marks:parsed.data.enabled?[...p.marks,{kind,id}]:p.marks.filter(m=>m.kind!==kind||m.id!==id)}));}catch{setError('Your change was not saved. Please try again.');}finally{locks.current.delete(k);setBusy(locks.current.size>0);}}
+  async function save(p:Preferences){const parsed=preferencesSchema.safeParse(p);if(!parsed.success){setError(parsed.error.issues[0]?.message??'Check your preferences');return false;}if(!ready)return false;setBusy(true);setError('');const owner=user?.id;try{if(owner){await persist({data:parsed.data});if(currentUser.current===owner)qc.setQueryData<State>(['personal',owner],old=>({...old??empty,preferences:parsed.data}));}else setGuest(old=>({...old,preferences:parsed.data}));return true;}catch{setError('Preferences were not saved. Please try again.');return false;}finally{setBusy(false);}}
+  return <Context.Provider value={{state,ready,error:error||(query.error?'Could not load your account data. Try again.':''),busy,toggle,save,retry:()=>{setError('');void query.refetch();}}}>{children}</Context.Provider>;
+}
+export function usePersonal(){const c=useContext(Context);if(!c)throw new Error('PersonalProvider missing');return c;}
