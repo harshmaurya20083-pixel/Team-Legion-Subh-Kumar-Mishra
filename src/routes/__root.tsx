@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import { AppShell } from "@/components/AppShell";
 import { SavedProvider } from "@/lib/saved";
+import { AccountProvider } from "@/lib/account";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -129,9 +130,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <SavedProvider>
-        <AppShell>
+        <AccountProvider><AppShell>
           <Outlet />
-        </AppShell>
+        </AppShell></AccountProvider>
       </SavedProvider>
     </QueryClientProvider>
   );

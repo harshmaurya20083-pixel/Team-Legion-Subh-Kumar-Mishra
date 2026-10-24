@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate, type SearchSchemaInput } from "@tanstack/react-router";
 import { Search, X, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
-import { events, EVENT_LOCATIONS, EVENT_CAMPUSES, EVENT_SKILLS, EVENT_ELIGIBILITY } from "@/data/events";
+import { publicEventsOptions, usePublicEvents } from "@/lib/event-query";
 import { EVENT_CATEGORIES, EVENT_FORMATS } from "@/data/types";
 import { filterEvents, toggleValue } from "@/lib/filters";
 import { EventCard } from "@/components/EventCard";
@@ -14,12 +14,18 @@ const text = (value: unknown): string => typeof value === "string" ? value : "";
 type EventSearchInput = SearchSchemaInput & { q?: string | undefined; category?: string | undefined; categories?: string[] | undefined; formats?: string[] | undefined; locations?: string[] | undefined; skills?: string[] | undefined; eligibility?: string[] | undefined; organizers?: string[] | undefined; from?: string | undefined; until?: string | undefined; sort?: string | undefined };
 
 export const Route = createFileRoute("/explore")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(publicEventsOptions),
   validateSearch: (s: EventSearchInput) => ({ q: text(s.q) || undefined, category: text(s.category) || undefined, categories: list(s.categories), formats: list(s.formats), locations: list(s.locations), skills: list(s.skills), eligibility: list(s.eligibility), organizers: list(s.organizers), from: text(s.from), until: text(s.until), sort: text(s.sort) || "upcoming" }),
   head: () => ({ meta: [{ title: "Explore Events — MyWorld" }, { name: "description", content: "Discover clearly labelled sample hackathons, workshops, meetups, conferences and competitions by city, date, format and interests." }, { property: "og:title", content: "Explore Events — MyWorld" }, { property: "og:description", content: "Find sample events in Austin, Seattle, Boston or online with transparent filters." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }] }),
   component: ExploreEvents,
 });
 
 function ExploreEvents() {
+  const events = usePublicEvents();
+  const EVENT_LOCATIONS = [...new Set(events.map(e => e.city))].sort();
+  const EVENT_CAMPUSES = [...new Set(events.map(e => e.campus))].sort();
+  const EVENT_SKILLS = [...new Set(events.flatMap(e => e.skills))].sort();
+  const EVENT_ELIGIBILITY = [...new Set(events.flatMap(e => e.eligibility))].sort();
   const search = Route.useSearch();
   const navigate = useNavigate({ from: "/explore" });
   const [locationInput, setLocationInput] = useState("");
@@ -33,7 +39,7 @@ function ExploreEvents() {
   const hasFilters = active.length > 0 || Boolean(search.q || search.from || search.until);
   return (
     <div className="space-y-7">
-      <header><p className="eyebrow text-primary">Near you · Around your interests</p><h1 className="mt-2 text-4xl font-semibold md:text-5xl">Explore Events</h1><p className="mt-3 max-w-xl text-sm text-muted-foreground">Sample edition — all events, venues and organizers are illustrative, not real registrations.</p></header>
+      <header><p className="eyebrow text-primary">Near you · Around your interests</p><h1 className="mt-2 text-4xl font-semibold md:text-5xl">Explore Events</h1><p className="mt-3 max-w-xl text-sm text-muted-foreground">Sample events are labelled. Community submissions appear only after review; approval does not imply source verification.</p><Button asChild variant="outline" className="mt-4"><Link to="/submit-event">Submit an event</Link></Button></header>
       <div className="flex items-center gap-3 rounded-md border bg-card px-4"><Search className="size-5 shrink-0 text-muted-foreground" /><input type="search" aria-label="Search events" placeholder="Search events, organizers or topics" value={search.q ?? ""} onChange={(e) => navigate({ search: (prev) => ({ ...prev, q: e.target.value || undefined }), replace: true })} className="min-h-12 w-full bg-transparent text-sm outline-none" /></div>
       <div className="grid gap-8 lg:grid-cols-[230px_minmax(0,1fr)]">
         <details open className="self-start border-y py-4 lg:border-y-0 lg:border-r lg:pr-6"><summary className="mb-5 flex cursor-pointer items-center gap-2 text-sm font-medium"><SlidersHorizontal className="size-4" />Filters</summary><div className="space-y-6">

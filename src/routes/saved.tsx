@@ -3,10 +3,11 @@ import { InfoCard } from "@/components/InfoCard";
 import { EmptyState, PrimaryLink } from "@/components/bits";
 import { informationItems } from "@/data/information";
 import { useSaved } from "@/lib/saved";
-import { events } from "@/data/events";
+import { publicEventsOptions, usePublicEvents } from "@/lib/event-query";
 import { EventCard } from "@/components/EventCard";
 
 export const Route = createFileRoute("/saved")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(publicEventsOptions),
   head: () => ({
     meta: [
       { title: "Saved — MyWorld" },
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/saved")({
 });
 
 function Saved() {
+  const events = usePublicEvents();
   const { savedIds } = useSaved();
   const items = informationItems.filter((i) => savedIds.includes(i.id));
   const savedEvents = events.filter((event) => savedIds.includes(event.id) && event.status === "published" && event.reviewStatus === "approved");
