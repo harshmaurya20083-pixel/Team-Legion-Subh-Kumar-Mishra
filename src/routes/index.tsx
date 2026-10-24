@@ -63,7 +63,7 @@ function Home() {
         </form>
       </section>
 
-      <InfoCard item={featured} variant="featured" />
+      {featured && <InfoCard item={featured} variant="featured" />}
 
       {/* Topics */}
       <section>
