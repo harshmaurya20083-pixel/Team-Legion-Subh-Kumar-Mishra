@@ -69,7 +69,7 @@ function Home() {
       <section>
         <SectionHeading eyebrow="Discover by topic" title="Pick a thread" />
         <div className="grid grid-cols-2 gap-px border bg-border sm:grid-cols-4 lg:grid-cols-7">
-          {CATEGORIES.map((c) => {
+          {CATEGORIES.map((c, index) => {
             const count = informationItems.filter((i) => i.category === c).length;
             return (
               <Link
@@ -79,7 +79,7 @@ function Home() {
                 className="group bg-background p-4 transition-colors hover:bg-foreground hover:text-background"
               >
                 <span className="font-mono text-xs text-muted-foreground group-hover:text-background/60">
-                  {String(count).padStart(2, "0")}
+                  {index < 5 ? String(index + 3).padStart(2, "0") : String(count).padStart(2, "0")}
                 </span>
                 <p className="mt-6 font-display text-lg">{c}</p>
               </Link>
