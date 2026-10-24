@@ -10,18 +10,32 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as InternshipsRouteImport } from './routes/internships'
 import { Route as PreferencesRouteImport } from './routes/preferences'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SavedRouteImport } from './routes/saved'
+import { Route as SubmitEventRouteImport } from './routes/submit-event'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as EventsIdRouteImport } from './routes/events.$id'
 import { Route as ItemIdRouteImport } from './routes/item.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunitiesRoute = CommunitiesRouteImport.update({
@@ -44,6 +58,11 @@ const PreferencesRoute = PreferencesRouteImport.update({
   path: '/preferences',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
@@ -53,6 +72,16 @@ const SavedRoute = SavedRouteImport.update({
   id: '/saved',
   path: '/saved',
   getParentRoute: () => rootRouteImport,
+} as any)
+const SubmitEventRoute = SubmitEventRouteImport.update({
+  id: '/submit-event',
+  path: '/submit-event',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const EventsIdRoute = EventsIdRouteImport.update({
   id: '/events/$id',
@@ -67,35 +96,48 @@ const ItemIdRoute = ItemIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/communities': typeof CommunitiesRoute
   '/explore': typeof ExploreRoute
   '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
   '/saved': typeof SavedRoute
+  '/submit-event': typeof SubmitEventRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/events/$id': typeof EventsIdRoute
   '/item/$id': typeof ItemIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/communities': typeof CommunitiesRoute
   '/explore': typeof ExploreRoute
   '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
   '/saved': typeof SavedRoute
+  '/submit-event': typeof SubmitEventRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/events/$id': typeof EventsIdRoute
   '/item/$id': typeof ItemIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/communities': typeof CommunitiesRoute
   '/explore': typeof ExploreRoute
   '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
   '/saved': typeof SavedRoute
+  '/submit-event': typeof SubmitEventRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/events/$id': typeof EventsIdRoute
   '/item/$id': typeof ItemIdRoute
 }
@@ -103,46 +145,63 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/communities'
     | '/explore'
     | '/internships'
     | '/preferences'
+    | '/reset-password'
     | '/resources'
     | '/saved'
+    | '/submit-event'
+    | '/admin'
     | '/events/$id'
     | '/item/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/communities'
     | '/explore'
     | '/internships'
     | '/preferences'
+    | '/reset-password'
     | '/resources'
     | '/saved'
+    | '/submit-event'
+    | '/admin'
     | '/events/$id'
     | '/item/$id'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/communities'
     | '/explore'
     | '/internships'
     | '/preferences'
+    | '/reset-password'
     | '/resources'
     | '/saved'
+    | '/submit-event'
+    | '/_authenticated/admin'
     | '/events/$id'
     | '/item/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   CommunitiesRoute: typeof CommunitiesRoute
   ExploreRoute: typeof ExploreRoute
   InternshipsRoute: typeof InternshipsRoute
   PreferencesRoute: typeof PreferencesRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ResourcesRoute: typeof ResourcesRoute
   SavedRoute: typeof SavedRoute
+  SubmitEventRoute: typeof SubmitEventRoute
   EventsIdRoute: typeof EventsIdRoute
   ItemIdRoute: typeof ItemIdRoute
 }
@@ -154,6 +213,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/communities': {
@@ -184,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreferencesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resources': {
       id: '/resources'
       path: '/resources'
@@ -197,6 +277,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/saved'
       preLoaderRoute: typeof SavedRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/submit-event': {
+      id: '/submit-event'
+      path: '/submit-event'
+      fullPath: '/submit-event'
+      preLoaderRoute: typeof SubmitEventRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/events/$id': {
       id: '/events/$id'
@@ -215,14 +309,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   CommunitiesRoute: CommunitiesRoute,
   ExploreRoute: ExploreRoute,
   InternshipsRoute: InternshipsRoute,
   PreferencesRoute: PreferencesRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ResourcesRoute: ResourcesRoute,
   SavedRoute: SavedRoute,
+  SubmitEventRoute: SubmitEventRoute,
   EventsIdRoute: EventsIdRoute,
   ItemIdRoute: ItemIdRoute,
 }
