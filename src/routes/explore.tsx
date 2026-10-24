@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 const list = (value: unknown): string[] => Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : typeof value === "string" && value ? [value] : [];
 const text = (value: unknown): string => typeof value === "string" ? value : "";
-type EventSearchInput = SearchSchemaInput & { q?: string; category?: string; categories?: string[]; formats?: string[]; locations?: string[]; skills?: string[]; eligibility?: string[]; organizers?: string[]; from?: string; until?: string; sort?: string };
+type EventSearchInput = SearchSchemaInput & { q?: string | undefined; category?: string | undefined; categories?: string[] | undefined; formats?: string[] | undefined; locations?: string[] | undefined; skills?: string[] | undefined; eligibility?: string[] | undefined; organizers?: string[] | undefined; from?: string | undefined; until?: string | undefined; sort?: string | undefined };
 
 export const Route = createFileRoute("/explore")({
   validateSearch: (s: EventSearchInput) => ({ q: text(s.q) || undefined, category: text(s.category) || undefined, categories: list(s.categories), formats: list(s.formats), locations: list(s.locations), skills: list(s.skills), eligibility: list(s.eligibility), organizers: list(s.organizers), from: text(s.from), until: text(s.until), sort: text(s.sort) || "upcoming" }),
