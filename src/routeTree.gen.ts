@@ -22,7 +22,7 @@ import { Route as SavedRouteImport } from './routes/saved'
 import { Route as SubmitEventRouteImport } from './routes/submit-event'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as EventsIdRouteImport } from './routes/events.$id'
-import { Route as InternshipsIdRouteImport } from './routes/internships.$id'
+import { Route as InternshipsIdRouteImport } from './routes/internships_.$id'
 import { Route as ItemIdRouteImport } from './routes/item.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -90,9 +90,9 @@ const EventsIdRoute = EventsIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const InternshipsIdRoute = InternshipsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => InternshipsRoute,
+  id: '/internships_/$id',
+  path: '/internships/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ItemIdRoute = ItemIdRouteImport.update({
   id: '/item/$id',
@@ -105,7 +105,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/communities': typeof CommunitiesRoute
   '/explore': typeof ExploreRoute
-  '/internships': typeof InternshipsRouteWithChildren
+  '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
   '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
@@ -121,7 +121,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/communities': typeof CommunitiesRoute
   '/explore': typeof ExploreRoute
-  '/internships': typeof InternshipsRouteWithChildren
+  '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
   '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
@@ -139,7 +139,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/communities': typeof CommunitiesRoute
   '/explore': typeof ExploreRoute
-  '/internships': typeof InternshipsRouteWithChildren
+  '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
   '/reset-password': typeof ResetPasswordRoute
   '/resources': typeof ResourcesRoute
@@ -147,7 +147,7 @@ export interface FileRoutesById {
   '/submit-event': typeof SubmitEventRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/events/$id': typeof EventsIdRoute
-  '/internships/$id': typeof InternshipsIdRoute
+  '/internships_/$id': typeof InternshipsIdRoute
   '/item/$id': typeof ItemIdRoute
 }
 export interface FileRouteTypes {
@@ -198,7 +198,7 @@ export interface FileRouteTypes {
     | '/submit-event'
     | '/_authenticated/admin'
     | '/events/$id'
-    | '/internships/$id'
+    | '/internships_/$id'
     | '/item/$id'
   fileRoutesById: FileRoutesById
 }
@@ -208,13 +208,14 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CommunitiesRoute: typeof CommunitiesRoute
   ExploreRoute: typeof ExploreRoute
-  InternshipsRoute: typeof InternshipsRouteWithChildren
+  InternshipsRoute: typeof InternshipsRoute
   PreferencesRoute: typeof PreferencesRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ResourcesRoute: typeof ResourcesRoute
   SavedRoute: typeof SavedRoute
   SubmitEventRoute: typeof SubmitEventRoute
   EventsIdRoute: typeof EventsIdRoute
+  InternshipsIdRoute: typeof InternshipsIdRoute
   ItemIdRoute: typeof ItemIdRoute
 }
 
@@ -311,12 +312,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/internships/$id': {
-      id: '/internships/$id'
-      path: '/$id'
+    '/internships_/$id': {
+      id: '/internships_/$id'
+      path: '/internships/$id'
       fullPath: '/internships/$id'
       preLoaderRoute: typeof InternshipsIdRouteImport
-      parentRoute: typeof InternshipsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/item/$id': {
       id: '/item/$id'
@@ -339,31 +340,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
-interface InternshipsRouteChildren {
-  InternshipsIdRoute: typeof InternshipsIdRoute
-}
-
-const InternshipsRouteChildren: InternshipsRouteChildren = {
-  InternshipsIdRoute: InternshipsIdRoute,
-}
-
-const InternshipsRouteWithChildren = InternshipsRoute._addFileChildren(
-  InternshipsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CommunitiesRoute: CommunitiesRoute,
   ExploreRoute: ExploreRoute,
-  InternshipsRoute: InternshipsRouteWithChildren,
+  InternshipsRoute: InternshipsRoute,
   PreferencesRoute: PreferencesRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ResourcesRoute: ResourcesRoute,
   SavedRoute: SavedRoute,
   SubmitEventRoute: SubmitEventRoute,
   EventsIdRoute: EventsIdRoute,
+  InternshipsIdRoute: InternshipsIdRoute,
   ItemIdRoute: ItemIdRoute,
 }
 export const routeTree = rootRouteImport
