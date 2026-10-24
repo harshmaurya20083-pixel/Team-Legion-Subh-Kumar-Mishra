@@ -11,9 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunitiesRouteImport } from './routes/communities'
-import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as InternshipsRouteImport } from './routes/internships'
 import { Route as PreferencesRouteImport } from './routes/preferences'
+import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as SavedRouteImport } from './routes/saved'
 import { Route as ItemIdRouteImport } from './routes/item.$id'
 
@@ -27,11 +27,6 @@ const CommunitiesRoute = CommunitiesRouteImport.update({
   path: '/communities',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ExploreRoute = ExploreRouteImport.update({
-  id: '/explore',
-  path: '/explore',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const InternshipsRoute = InternshipsRouteImport.update({
   id: '/internships',
   path: '/internships',
@@ -40,6 +35,11 @@ const InternshipsRoute = InternshipsRouteImport.update({
 const PreferencesRoute = PreferencesRouteImport.update({
   id: '/preferences',
   path: '/preferences',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SavedRoute = SavedRouteImport.update({
@@ -56,18 +56,18 @@ const ItemIdRoute = ItemIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/communities': typeof CommunitiesRoute
-  '/explore': typeof ExploreRoute
   '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
+  '/resources': typeof ResourcesRoute
   '/saved': typeof SavedRoute
   '/item/$id': typeof ItemIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/communities': typeof CommunitiesRoute
-  '/explore': typeof ExploreRoute
   '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
+  '/resources': typeof ResourcesRoute
   '/saved': typeof SavedRoute
   '/item/$id': typeof ItemIdRoute
 }
@@ -75,9 +75,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/communities': typeof CommunitiesRoute
-  '/explore': typeof ExploreRoute
   '/internships': typeof InternshipsRoute
   '/preferences': typeof PreferencesRoute
+  '/resources': typeof ResourcesRoute
   '/saved': typeof SavedRoute
   '/item/$id': typeof ItemIdRoute
 }
@@ -86,27 +86,27 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/communities'
-    | '/explore'
     | '/internships'
     | '/preferences'
+    | '/resources'
     | '/saved'
     | '/item/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/communities'
-    | '/explore'
     | '/internships'
     | '/preferences'
+    | '/resources'
     | '/saved'
     | '/item/$id'
   id:
     | '__root__'
     | '/'
     | '/communities'
-    | '/explore'
     | '/internships'
     | '/preferences'
+    | '/resources'
     | '/saved'
     | '/item/$id'
   fileRoutesById: FileRoutesById
@@ -114,9 +114,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CommunitiesRoute: typeof CommunitiesRoute
-  ExploreRoute: typeof ExploreRoute
   InternshipsRoute: typeof InternshipsRoute
   PreferencesRoute: typeof PreferencesRoute
+  ResourcesRoute: typeof ResourcesRoute
   SavedRoute: typeof SavedRoute
   ItemIdRoute: typeof ItemIdRoute
 }
@@ -137,13 +137,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunitiesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/explore': {
-      id: '/explore'
-      path: '/explore'
-      fullPath: '/explore'
-      preLoaderRoute: typeof ExploreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/internships': {
       id: '/internships'
       path: '/internships'
@@ -156,6 +149,13 @@ declare module '@tanstack/react-router' {
       path: '/preferences'
       fullPath: '/preferences'
       preLoaderRoute: typeof PreferencesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/saved': {
@@ -178,9 +178,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CommunitiesRoute: CommunitiesRoute,
-  ExploreRoute: ExploreRoute,
   InternshipsRoute: InternshipsRoute,
   PreferencesRoute: PreferencesRoute,
+  ResourcesRoute: ResourcesRoute,
   SavedRoute: SavedRoute,
   ItemIdRoute: ItemIdRoute,
 }

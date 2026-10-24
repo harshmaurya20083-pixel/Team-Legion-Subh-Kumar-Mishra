@@ -13,7 +13,7 @@ interface ExploreSearch {
   category?: string | undefined;
 }
 
-export const Route = createFileRoute("/explore")({
+export const Route = createFileRoute("/resources")({
   validateSearch: (s: Record<string, unknown>): ExploreSearch => ({
     q: typeof s["q"] === "string" ? s["q"] : undefined,
     category: typeof s["category"] === "string" ? s["category"] : undefined,
