@@ -109,6 +109,13 @@
   input, textarea, select {
     min-width: 0;
   }
+  progress {
+    accent-color: var(--primary);
+  }
+  input[type="checkbox"] {
+    accent-color: var(--primary);
+    transition: outline-color 150ms ease;
+  }
   [data-status="active"] {
     scroll-margin: 1rem;
   }

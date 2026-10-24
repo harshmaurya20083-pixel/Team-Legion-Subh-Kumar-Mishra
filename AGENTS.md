@@ -12,11 +12,12 @@
 ## Project rules
 - Sample data lives in `src/data/*` separate from UI; swap sources there without touching components.
 - Search/filter logic is pure functions in `src/lib/filters.ts` (tested), so it can move server-side later.
-- Saved state is one React context (`src/lib/saved.tsx`) mirrored to localStorage — keeps pages consistent with no backend in Round 1.
+- PersonalProvider owns preferences, saved IDs, follows and preparation marks; account data uses authenticated Cloud functions with owner-only policies, while signed-out browser state stays separate and legacy browser saves are imported once into the signed-in account.
 - Never invent external/invite URLs; cards disable links unless `isValidUrl` passes.
 - Preserve public URLs; the shared AppShell owns six desktop destinations and four mobile tabs plus an accessible More sheet, so navigation remains consistent without crowding small screens.
-- Use the shared Button and semantic CSS tokens for controls; the internship entry route reuses existing sample records until its preparation-guide stage, avoiding fabricated vacancies or duplicated data.
+- Use the shared Button and semantic CSS tokens for controls; internship fixtures and requirement-mapped preparation guides live separately in src/data/internships.ts, with existing resource IDs reused and all illustrative listings labelled Sample.
 - Event fixtures are separate from legacy information records, use namespaced IDs in the existing saved context, and expose only published/approved records; event filter state lives in URL search parameters so links and reloads preserve selections.
 - Explore at /explore is event-specific; legacy resource discovery remains available at /resources and existing /item/$id links remain intact to preserve earlier saved content.
 - Event submissions and moderation persist in Lovable Cloud, with private contacts separated from public event payloads; authenticated server functions and database RPCs enforce validation and admin roles, so browser state cannot grant publication rights.
 - Published event queries merge preserved sample fixtures with approved shared records across Home, Explore, details and Saved; never seed or overwrite browser saves when connecting Cloud.
+- Recommendation rules are pure functions in src/lib/personalization.ts and src/lib/internships.ts with concrete tests; explain each preference or listing match without assessing ability, and community feeds use only explicit community IDs.
