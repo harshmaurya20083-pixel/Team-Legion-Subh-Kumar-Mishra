@@ -12,7 +12,7 @@ import { moderationSchema } from '@/lib/submission';
 import { CATEGORIES, PLATFORMS } from '@/data/types';
 export const Route = createFileRoute('/_authenticated/admin')({ head: () => ({ meta: [{ title: 'Content moderation — MyWorld' }, { name: 'description', content: 'Restricted MyWorld event review workspace.' }, { property: 'og:title', content: 'Content moderation — MyWorld' }, { property: 'og:description', content: 'Restricted event moderation.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: Admin });
 function Admin() {
-  const load = useServerFn(adminQueue), moderate = useServerFn(moderateEvent); const qc = useQueryClient();
+  const load = useServerFn(adminQueue), moderate = useServerFn(moderateEvent), updateLink = useServerFn(updateEventLink); const qc = useQueryClient();
   const queue = useQuery({ queryKey: ['admin-queue'], queryFn: () => load(), retry: false });
   const [section, setSection] = useState<'events' | 'communities'>('events');
   const [tab, setTab] = useState('pending'), [selected, setSelected] = useState<string | null>(null), [reason, setReason] = useState(''), [message, setMessage] = useState(''), [busy, setBusy] = useState(false);
