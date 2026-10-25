@@ -2,7 +2,7 @@
 import { ExternalLink, MapPin, MessageCircle, UserPlus, UserCheck } from "lucide-react";
 import type { Community } from "@/data/types";
 import { isValidUrl } from "@/lib/filters";
-import { CategoryLabel, SampleBadge } from "./bits";
+import { CategoryLabel } from "./bits";
 import { Button } from "@/components/ui/button";
 import { usePersonal } from '@/lib/personal';
 
@@ -18,7 +18,6 @@ export function CommunityCard({ community }: { community: Community }) {
     <article className="card-hover flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5">
       <div className="flex items-center justify-between gap-2">
         <span className="font-mono text-xs font-medium">{community.platform}</span>
-        {community.isSample && <SampleBadge />}
       </div>
       <h3 className="font-display text-xl font-medium leading-snug">{community.name}</h3>
       <CategoryLabel category={community.category} />
@@ -62,7 +61,7 @@ export function CommunityCard({ community }: { community: Community }) {
               Link unavailable
             </Button>
             <p className="mt-1.5 text-xs text-muted-foreground">
-              This is a sample community — no real invite link exists yet.
+              No invite link has been added yet.
             </p>
           </div>
         )}

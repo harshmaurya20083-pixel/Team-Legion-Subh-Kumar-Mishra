@@ -78,7 +78,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <div className="mt-auto space-y-3">{isAdmin && <Button asChild variant="outline" className="w-full"><Link to="/admin"><ShieldCheck className="size-4" />Moderation</Link></Button>}<Button asChild variant="outline" className="w-full"><Link to="/submit-event">Submit an event</Link></Button><Button asChild variant="ghost" className="w-full"><Link to="/auth">{user ? "Your account" : "Sign in"}</Link></Button><div className="flex items-center justify-between gap-2"><p className="text-xs leading-relaxed text-muted-foreground">Samples are labelled.<br />Community submissions require review.</p><ThemeToggle /></div></div>
+        <div className="mt-auto space-y-3">{isAdmin && <Button asChild variant="outline" className="w-full"><Link to="/admin"><ShieldCheck className="size-4" />Moderation</Link></Button>}<Button asChild variant="outline" className="w-full"><Link to="/submit-event">Submit an event</Link></Button><Button asChild variant="ghost" className="w-full"><Link to="/auth">{user ? "Your account" : "Sign in"}</Link></Button><div className="flex items-center justify-between gap-2"><p className="text-xs leading-relaxed text-muted-foreground">Listings shown are examples.<br />Community submissions require review.</p><ThemeToggle /></div></div>
       </aside>
 
       {/* Mobile top bar */}

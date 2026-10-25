@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { InfoCard } from "@/components/InfoCard";
-import { CategoryLabel, SampleBadge, SaveButton } from "@/components/bits";
+import { CategoryLabel, SaveButton } from "@/components/bits";
 import { informationItems } from "@/data/information";
 import { formatDate, isValidUrl } from "@/lib/filters";
 
@@ -44,8 +44,7 @@ function ItemDetail() {
       <article className="max-w-3xl space-y-5">
         <div className="flex items-center gap-3">
           <CategoryLabel category={item.category} />
-          {item.isSample && <SampleBadge />}
-        </div>
+         </div>
         <h1 className="text-4xl font-semibold leading-tight md:text-5xl">{item.title}</h1>
         <p className="text-sm text-muted-foreground">
           {item.sourceName} ({item.sourceType}) · {item.contentType} · {formatDate(item.date)}
@@ -63,7 +62,7 @@ function ItemDetail() {
               Open source <ExternalLink className="h-4 w-4" />
             </a>
           ) : (
-            <span className="text-xs text-muted-foreground">No external link — this is sample content.</span>
+            <span className="text-xs text-muted-foreground">No external link has been supplied.</span>
           )}
           <Link to="/resources" search={{ category: item.category }} className="text-sm text-primary hover:underline">
             More in {item.category}

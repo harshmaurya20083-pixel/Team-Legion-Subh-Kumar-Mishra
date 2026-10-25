@@ -38,7 +38,7 @@ export const communities: Community[] = [
   },
   {
     id: "c4",
-    name: "r/StudentFounders (sample)",
+    name: "Student Founders Discussion",
     platform: "Reddit",
     category: "Business",
     description: "Discussions about starting small projects and businesses while still studying.",
@@ -81,7 +81,7 @@ export const communities: Community[] = [
   },
   {
     id: "c8",
-    name: "r/NewsDiscussion101 (sample)",
+    name: "News Discussion 101",
     platform: "Reddit",
     category: "General News",
     description: "Calm, source-first discussions of current affairs with a focus on media literacy.",

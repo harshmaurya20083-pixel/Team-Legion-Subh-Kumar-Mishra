@@ -53,7 +53,7 @@ function Explore() {
       <header>
         <p className="eyebrow text-primary">Discover</p>
         <h1 className="mt-2 text-4xl font-semibold md:text-5xl">Resources & Updates</h1>
-        <p className="mb-5 mt-3 text-sm text-muted-foreground">Sample learning resources, opportunities and community updates.</p>
+        <p className="mb-5 mt-3 text-sm text-muted-foreground">Learning resources, opportunities and community updates — examples for now.</p>
         <SearchInput value={query} onChange={setQuery} placeholder="Search titles, sources, tags…" />
       </header>
 
