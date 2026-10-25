@@ -13,6 +13,27 @@ function isWhatsAppLink(url: string) {
 
 export function CommunityCard({ community }: { community: Community }) {
   const {state,toggle,ready,busy}=usePersonal();
+  const [copied,setCopied]=useState(false);
+  const copyTimer=useRef<number|undefined>(undefined);
+  const copyLink=async()=>{
+    try{
+      await navigator.clipboard.writeText(community.url);
+    }catch{
+      // Fallback for browsers/contexts without the async clipboard API.
+      const ta=document.createElement('textarea');
+      ta.value=community.url;
+      ta.setAttribute('readonly','');
+      ta.style.position='fixed';
+      ta.style.opacity='0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    window.clearTimeout(copyTimer.current);
+    copyTimer.current=window.setTimeout(()=>setCopied(false),2000);
+  };
   const followed=state.marks.some(m=>m.kind==='follow'&&m.id===community.id);
   const hasLink = isValidUrl(community.url);
   return (
