@@ -6,6 +6,7 @@ import { useSaved } from "@/lib/saved";
 import { useAccount } from "@/lib/account";
 import { useIsAdmin } from "@/lib/admin";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const NAV = [
@@ -77,15 +78,18 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
-        <div className="mt-auto space-y-3">{isAdmin && <Button asChild variant="outline" className="w-full"><Link to="/admin"><ShieldCheck className="size-4" />Moderation</Link></Button>}<Button asChild variant="outline" className="w-full"><Link to="/submit-event">Submit an event</Link></Button><Button asChild variant="ghost" className="w-full"><Link to="/auth">{user ? "Your account" : "Sign in"}</Link></Button><p className="text-xs leading-relaxed text-muted-foreground">Samples are labelled.<br />Community submissions require review.</p></div>
+        <div className="mt-auto space-y-3">{isAdmin && <Button asChild variant="outline" className="w-full"><Link to="/admin"><ShieldCheck className="size-4" />Moderation</Link></Button>}<Button asChild variant="outline" className="w-full"><Link to="/submit-event">Submit an event</Link></Button><Button asChild variant="ghost" className="w-full"><Link to="/auth">{user ? "Your account" : "Sign in"}</Link></Button><div className="flex items-center justify-between gap-2"><p className="text-xs leading-relaxed text-muted-foreground">Samples are labelled.<br />Community submissions require review.</p><ThemeToggle /></div></div>
       </aside>
 
       {/* Mobile top bar */}
       <header className="sticky top-0 z-20 flex items-center justify-between border-b bg-background/95 px-4 py-3 backdrop-blur md:hidden">
         <Wordmark />
-        <Link to="/explore" aria-label="Search" className="flex size-11 items-center justify-center rounded-md hover:bg-accent">
-          <Search className="h-5 w-5" />
-        </Link>
+        <div className="flex items-center gap-1">
+          <ThemeToggle className="size-11" />
+          <Link to="/explore" aria-label="Search" className="flex size-11 items-center justify-center rounded-md hover:bg-accent">
+            <Search className="h-5 w-5" />
+          </Link>
+        </div>
       </header>
 
       <main id="main-content" tabIndex={-1} className="mx-auto w-full min-w-0 max-w-6xl px-4 pb-28 pt-6 focus:outline-none md:px-8 md:pb-16 md:pt-10 lg:px-10">

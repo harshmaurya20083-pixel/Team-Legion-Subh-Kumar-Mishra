@@ -11,7 +11,7 @@ export function CommunityCard({ community }: { community: Community }) {
   const followed=state.marks.some(m=>m.kind==='follow'&&m.id===community.id);
   const hasLink = isValidUrl(community.url);
   return (
-    <article className="flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5">
+    <article className="card-hover flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5">
       <div className="flex items-center justify-between gap-2">
         <span className="font-mono text-xs font-medium">{community.platform}</span>
         {community.isSample && <SampleBadge />}
