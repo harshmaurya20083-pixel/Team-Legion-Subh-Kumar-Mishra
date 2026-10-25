@@ -23,7 +23,7 @@ export function CommunityCard({ community }: { community: Community }) {
     }catch{
       // Fallback for browsers/contexts without the async clipboard API.
       const ta=document.createElement('textarea');
-      ta.value=community.url;
+      ta.value=url;
       ta.setAttribute('readonly','');
       ta.style.position='fixed';
       ta.style.opacity='0';
