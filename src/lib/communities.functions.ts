@@ -35,7 +35,11 @@ export const listPublishedCommunities = createServerFn({ method: 'GET' }).handle
   if (error) throw new Error('Unable to load communities');
   for (const row of data ?? []) {
     const tags = z.array(z.string()).safeParse(row.tags);
-    result.push({ id: `comm-${row.id}`, name: row.name, platform: row.platform as Community['platform'], category: row.category as Community['category'], description: row.description, tags: tags.success ? tags.data : [], audience: row.audience || undefined, location: row.location || undefined, url: row.url || undefined, isSample: false });
+    const community: Community = { id: `comm-${row.id}`, name: row.name, platform: row.platform as Community['platform'], category: row.category as Community['category'], description: row.description, tags: tags.success ? tags.data : [], isSample: false };
+    if (row.audience) community.audience = row.audience;
+    if (row.location) community.location = row.location;
+    if (row.url) community.url = row.url;
+    result.push(community);
   }
   return result;
 });
