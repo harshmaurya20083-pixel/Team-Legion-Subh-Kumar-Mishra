@@ -42,9 +42,8 @@ function ItemDetail() {
         <ArrowLeft className="h-4 w-4" /> Resources
       </Link>
       <article className="max-w-3xl space-y-5">
-        <div className="flex items-center gap-3">
-          <CategoryLabel category={item.category} />
-         </div>
+        <CategoryLabel category={item.category} />
+
         <h1 className="text-4xl font-semibold leading-tight md:text-5xl">{item.title}</h1>
         <p className="text-sm text-muted-foreground">
           {item.sourceName} ({item.sourceType}) · {item.contentType} · {formatDate(item.date)}
