@@ -1,4 +1,7 @@
 # MyWorld roadmap
+- [x] Round 3 — audited server authorization, owner policies, validation triggers and metadata; redacted private duplicate details and made unavailable bookmarks removable; public/guest workflows and desktop/mobile checks passed
+- [ ] Round 3 signed-in workflow retest — blocked: no auth users exist; owner must create an account and sign in, then admin activation can proceed
+- [ ] Round 3 production verification — latest preview build is successful; no new deployment or production-mode build was performed
 - [x] Round 1 — frontend foundation: feed, explore, communities, saved, preferences preview (sample data)
 - [x] Round 2 Priority 1 — preserved existing features; refined shared styling; verified desktop/mobile navigation for all six destinations
 - [x] Round 2 Priority 2 — eight labelled sample events, dedicated discovery/details, URL-backed location/interest/date filters, sorting, and saved events; verified desktop/mobile flows and preserved resource discovery
