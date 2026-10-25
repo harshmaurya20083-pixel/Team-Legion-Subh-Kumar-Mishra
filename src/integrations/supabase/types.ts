@@ -305,6 +305,14 @@ export type Database = {
         Args: { acknowledged?: boolean; candidate: Json; contact: string }
         Returns: Json
       }
+      update_event_registration: {
+        Args: {
+          record_id: string
+          registration_deadline?: string
+          registration_url: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "user"
