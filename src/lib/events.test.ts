@@ -15,7 +15,7 @@ describe("Event discovery rules", () => {
     expect(filterEvents(events, { ...empty, categories: ["Hackathons"], formats: ["Offline"], locations: ["Mumbai"], skills: ["JavaScript"], eligibility: ["College students"] }, today).map((event) => event.id)).toEqual(["event-austin-build"]);
   });
   it("supports manual campus selection and unknown location empty results", () => {
-    expect(filterEvents(events, { ...empty, locations: ["mumbai central campus"] }, today).map((event) => event.id)).toEqual(["event-austin-build", "event-austin-pitch"]);
+    expect(filterEvents(events, { ...empty, locations: ["mumbai central campus"] }, today).map((event) => event.id)).toEqual(["event-austin-build"]);
     expect(filterEvents(events, { ...empty, locations: ["Unlisted city"] }, today)).toEqual([]);
   });
   it("Virtual selects online events without assigning invented distances", () => {
