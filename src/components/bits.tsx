@@ -45,7 +45,7 @@ export function SaveButton({ id, className }: { id: string; className?: string }
         className,
       )}
     >
-      <Icon className={cn("h-4 w-4 transition-transform", saved && "scale-110")} />
+      <Icon key={saved ? "saved" : "unsaved"} className={cn("save-feedback h-4 w-4 transition-transform", saved && "scale-110")} />
       {saved ? "Saved" : "Save"}
     </Button>
   );
