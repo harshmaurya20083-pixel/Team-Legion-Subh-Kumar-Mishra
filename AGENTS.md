@@ -21,3 +21,4 @@
 - Event submissions and moderation persist in Lovable Cloud, with private contacts separated from public event payloads; authenticated server functions and database RPCs enforce validation and admin roles, so browser state cannot grant publication rights.
 - Published event queries merge preserved sample fixtures with approved shared records across Home, Explore, details and Saved; never seed or overwrite browser saves when connecting Cloud.
 - Recommendation rules are pure functions in src/lib/personalization.ts and src/lib/internships.ts with concrete tests; explain each preference or listing match without assessing ability, and community feeds use only explicit community IDs.
+- Duplicate RPCs redact unpublished details unless the caller owns the submission or is an admin; unavailable saved IDs stay removable without fetching private listings.
