@@ -29,6 +29,13 @@
       "when": 1792860386076,
       "tag": "0003_personalization_and_preparation",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792892576091,
+      "tag": "0004_protect_private_duplicate_matches",
+      "breakpoints": true
     }
   ]
 }
