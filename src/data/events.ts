@@ -17,7 +17,7 @@ export const events: DiscoveryEvent[] = [
   {
     ...base, id: "event-austin-build", title: "Campus Build Weekend", category: "Hackathons", format: "Offline",
     description: "A two-day student hackathon to turn a small web development idea into a working prototype. Join a team, build together and share a short demo with fellow students. This is an illustrative event, not a real booking.",
-    city: "Austin", campus: "Austin Campus", venue: "Innovation Lab", date: "2026-11-07", endDate: "2026-11-08", timeZone: "America/Chicago",
+    city: "Mumbai", campus: "Mumbai Central Campus", venue: "Innovation Lab", date: "2026-11-07", endDate: "2026-11-08", timeZone: "Asia/Kolkata",
     registrationDeadline: "2026-11-04", organizer: "Campus Hackathon Teams", communityId: "c2",
     schedule: [{ time: "Nov 7 · 09:00", activity: "Welcome and team formation" }, { time: "Nov 7 · 10:00", activity: "Project building and mentoring" }, { time: "Nov 8 · 14:00", activity: "Project demos" }, { time: "Nov 8 · 16:00", activity: "Closing session" }],
     eligibility: ["College students", "Beginners welcome"], eligibilityDetails: "Open to currently enrolled college students. First-time hackathon participants are welcome; teams of two to four.",
@@ -34,7 +34,7 @@ export const events: DiscoveryEvent[] = [
   {
     ...base, id: "event-seattle-design", title: "Design & Coffee: Student Meetup", category: "Meetups", format: "Offline",
     description: "A relaxed student meetup for sharing design projects, exchanging feedback and meeting people working on creative ideas. The venue and gathering are illustrative.",
-    city: "Seattle", campus: "Seattle Campus", venue: "Student Commons", date: "2026-11-03", endDate: "2026-11-03", timeZone: "America/Los_Angeles",
+    city: "Mumbai", campus: "Mumbai Harbour Campus", venue: "Student Commons", date: "2026-11-03", endDate: "2026-11-03", timeZone: "Asia/Kolkata",
     registrationDeadline: "2026-11-02", organizer: "Student Design Circle",
     schedule: [{ time: "17:00", activity: "Introductions" }, { time: "17:30", activity: "Project sharing and feedback" }, { time: "19:00", activity: "Wrap-up" }],
     eligibility: ["College students", "Beginners welcome"], eligibilityDetails: "For students interested in design. A portfolio is optional; this meetup welcomes first-time participants.", skills: ["Design"], skillsDetails: "No required prior skills; bring curiosity and optionally a project to discuss.", tags: ["design", "feedback", "networking"],
@@ -42,7 +42,7 @@ export const events: DiscoveryEvent[] = [
   {
     ...base, id: "event-boston-research", title: "Student Research & Technology Forum", category: "Conferences", format: "Hybrid",
     description: "Student talks and panels about research, open-source technology and practical career paths. Attend the campus sessions or join the online track.",
-    city: "Boston", campus: "Boston Campus", venue: "Learning Auditorium", onlineDetails: "A remote session track is planned; no access link exists.", date: "2026-11-14", endDate: "2026-11-14", timeZone: "America/New_York",
+    city: "Mumbai", campus: "Mumbai North Campus", venue: "Learning Auditorium", onlineDetails: "A remote session track is planned; no access link exists.", date: "2026-11-14", endDate: "2026-11-14", timeZone: "Asia/Kolkata",
     registrationDeadline: "2026-11-10", organizer: "Student Research Collective",
     schedule: [{ time: "09:30", activity: "Opening talks" }, { time: "11:00", activity: "Research and open-source panels" }, { time: "14:00", activity: "Student project presentations" }, { time: "16:00", activity: "Closing discussion" }],
     eligibility: ["Open to everyone"], eligibilityDetails: "Attendance is open to students and other interested learners. Presentation participation would require a separate organizer submission.", skills: ["Research", "Python"], skillsDetails: "No skills required for attending. Python and research are session topics, not eligibility barriers.", tags: ["research", "open source", "technology"],
@@ -50,7 +50,7 @@ export const events: DiscoveryEvent[] = [
   {
     ...base, id: "event-austin-pitch", title: "Small Ideas, Big Possibilities", category: "Competitions", format: "Hybrid",
     description: "An illustrative student pitch competition for early project ideas. Practice explaining a problem, share your approach and receive peer feedback. No real prizes or selection claims are made.",
-    city: "Austin", campus: "Austin Campus", venue: "Project Studio", onlineDetails: "Remote pitches would be supported; no live access link is available.", date: "2026-11-21", endDate: "2026-11-21", timeZone: "America/Chicago",
+    city: "Mumbai", campus: "Mumbai Tech Campus", venue: "Project Studio", onlineDetails: "Remote pitches would be supported; no live access link is available.", date: "2026-11-21", endDate: "2026-11-21", timeZone: "Asia/Kolkata",
     registrationDeadline: "2026-11-15", organizer: "Student Founders Circle", communityId: "c4",
     schedule: [{ time: "10:00", activity: "Pitch preparation" }, { time: "11:00", activity: "Student pitches" }, { time: "13:00", activity: "Feedback and reflection" }],
     eligibility: ["College students"], eligibilityDetails: "Entrants must be college students with an early project idea. A working business or product is not required.", skills: ["Entrepreneurship", "Presentation"], skillsDetails: "Prepare a three-minute explanation of your idea. Prior business experience is not required.", tags: ["startup", "pitch", "projects"],
@@ -58,7 +58,7 @@ export const events: DiscoveryEvent[] = [
   {
     ...base, id: "event-seattle-python", title: "Python for Everyday Data", category: "Workshops", format: "Offline",
     description: "A hands-on workshop about exploring a small dataset, cleaning records and creating a simple chart. Practice with classmates in a welcoming lab setting.",
-    city: "Seattle", campus: "Seattle Campus", venue: "Computing Lab", date: "2026-11-06", endDate: "2026-11-06", timeZone: "America/Los_Angeles",
+    city: "Mumbai", campus: "Mumbai Harbour Campus", venue: "Computing Lab", date: "2026-11-06", endDate: "2026-11-06", timeZone: "Asia/Kolkata",
     registrationDeadline: "2026-11-05", organizer: "Campus Data Club",
     schedule: [{ time: "13:00", activity: "Python refresher" }, { time: "14:00", activity: "Data cleaning practice" }, { time: "15:30", activity: "Charts and discussion" }],
     eligibility: ["College students", "Beginners welcome"], eligibilityDetails: "For college students learning data skills; beginners are welcome in this illustrative workshop.", skills: ["Python", "Data analysis"], skillsDetails: "Bring a laptop. Basic Python syntax is helpful; no prior data analysis experience is expected.", tags: ["python", "data", "practice"],
@@ -66,7 +66,7 @@ export const events: DiscoveryEvent[] = [
   {
     ...base, id: "event-boston-web", title: "Web Makers: Project Exchange", category: "Meetups", format: "Offline",
     description: "Share a web project, trade small code-review tips and find a practice partner. Community gathering with optional project demos.",
-    city: "Boston", campus: "Boston Campus", venue: "Student Project Room", date: "2026-11-10", endDate: "2026-11-10", timeZone: "America/New_York",
+    city: "Mumbai", campus: "Mumbai North Campus", venue: "Student Project Room", date: "2026-11-10", endDate: "2026-11-10", timeZone: "Asia/Kolkata",
     organizer: "Frontend Learners Circle", communityId: "c1", schedule: [{ time: "18:00", activity: "Introductions and project demos" }, { time: "19:00", activity: "Peer feedback" }, { time: "20:00", activity: "Closing" }],
     eligibility: ["Open to everyone", "Beginners welcome"], eligibilityDetails: "Anyone interested in web development can attend this meetup. Showing a project is optional.", skills: ["JavaScript", "Web development"], skillsDetails: "No required skills for attending. Topics include JavaScript and web development.", tags: ["web development", "code review", "community"],
   },
