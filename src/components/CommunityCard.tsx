@@ -16,8 +16,10 @@ export function CommunityCard({ community }: { community: Community }) {
   const [copied,setCopied]=useState(false);
   const copyTimer=useRef<number|undefined>(undefined);
   const copyLink=async()=>{
+    const url=community.url;
+    if(!url) return;
     try{
-      await navigator.clipboard.writeText(community.url);
+      await navigator.clipboard.writeText(url);
     }catch{
       // Fallback for browsers/contexts without the async clipboard API.
       const ta=document.createElement('textarea');
