@@ -15,7 +15,7 @@ function Admin() {
   const load = useServerFn(adminQueue), moderate = useServerFn(moderateEvent), updateLink = useServerFn(updateEventLink); const qc = useQueryClient();
   const queue = useQuery({ queryKey: ['admin-queue'], queryFn: () => load(), retry: false });
   const [section, setSection] = useState<'events' | 'communities'>('events');
-  const [tab, setTab] = useState('pending'), [selected, setSelected] = useState<string | null>(null), [reason, setReason] = useState(''), [message, setMessage] = useState(''), [busy, setBusy] = useState(false);
+  const [tab, setTab] = useState('pending'), [selected, setSelected] = useState<string | null>(null), [reason, setReason] = useState(''), [message, setMessage] = useState(''), [busy, setBusy] = useState(false), [linkUrl, setLinkUrl] = useState(''), [linkDeadline, setLinkDeadline] = useState('');
   if (queue.isPending) return <p role="status">Checking administrator access…</p>;
   if (queue.error) return <div className="space-y-5 py-8"><ShieldCheck className="size-8 text-primary" /><h1 className="text-4xl">Administrator access required</h1><p className="max-w-xl text-sm text-muted-foreground">This account cannot access moderation records. Administrator roles must be assigned by the app owner; signing up never grants admin access.</p><Button variant="outline" onClick={() => queue.refetch()}>Check access again</Button></div>;
   const rows = queue.data ?? []; const active = rows.find(r => r.id === selected);
