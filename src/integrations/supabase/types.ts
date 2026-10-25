@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      community_records: {
+        Row: {
+          audience: string
+          category: string
+          created_at: string
+          created_by: string
+          description: string
+          id: string
+          location: string
+          name: string
+          platform: string
+          status: string
+          tags: Json
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          audience?: string
+          category: string
+          created_at?: string
+          created_by: string
+          description: string
+          id?: string
+          location?: string
+          name: string
+          platform: string
+          status?: string
+          tags?: Json
+          updated_at?: string
+          url?: string
+        }
+        Update: {
+          audience?: string
+          category?: string
+          created_at?: string
+          created_by?: string
+          description?: string
+          id?: string
+          location?: string
+          name?: string
+          platform?: string
+          status?: string
+          tags?: Json
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       event_contacts: {
         Row: {
           contact_email: string
