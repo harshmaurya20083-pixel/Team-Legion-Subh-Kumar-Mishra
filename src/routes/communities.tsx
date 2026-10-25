@@ -44,8 +44,8 @@ function Communities() {
         <p className="eyebrow text-primary">Community directory</p>
         <h1 className="text-4xl font-semibold md:text-5xl">Find your people.</h1>
         <p className="max-w-xl text-muted-foreground">
-          MyWorld doesn't host groups — it helps you discover them. Every community below is a
-          sample for now, so join links are switched off until real, checked links are added.
+          MyWorld doesn't host groups — it helps you discover them. Communities marked "Sample" are
+          illustrative and have no join link; the rest are added by the site administrator.
         </p>
         <SearchInput value={query} onChange={setQuery} placeholder="Search communities…" />
       </header>
