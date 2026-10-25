@@ -59,3 +59,7 @@ export const moderateEvent = createServerFn({ method: 'POST' }).middleware([requ
   if (error) throw new Error(error.code === '23505' ? 'An official URL is already used by a published event. Resolve the duplicate before publishing.' : 'Review was not saved. The event may be expired; try again.');
   return { ok: true };
 });
+export const myAdminStatus = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  const { data: admin } = await context.supabase.rpc('has_role', { _user_id: context.userId, _role: 'admin' });
+  return { admin: admin === true };
+});
