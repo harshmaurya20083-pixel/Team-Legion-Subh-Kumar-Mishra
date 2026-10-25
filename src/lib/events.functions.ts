@@ -64,7 +64,7 @@ export const updateEventLink = createServerFn({ method: 'POST' }).middleware([re
   if (!admin) throw new Error('Administrator access required');
   if (data.registrationUrl && !/^https?:\/\/\S+$/.test(data.registrationUrl)) throw new Error('Enter a valid URL starting with http:// or https://');
   if (data.registrationDeadline && !/^\d{4}-\d{2}-\d{2}$/.test(data.registrationDeadline)) throw new Error('Enter a valid deadline date');
-  const { error } = await context.supabase.rpc('update_event_registration', { record_id: data.id, registration_url: data.registrationUrl || null, registration_deadline: data.registrationDeadline || null });
+  const { error } = await context.supabase.rpc('update_event_registration', { record_id: data.id, registration_url: data.registrationUrl, registration_deadline: data.registrationDeadline });
   if (error) throw new Error(error.code === '23505' ? 'That URL is already used by another published event.' : 'Could not save the registration link. Check the URL and deadline, then try again.');
   return { ok: true };
 });
