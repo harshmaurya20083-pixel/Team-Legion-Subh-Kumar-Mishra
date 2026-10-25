@@ -10,6 +10,7 @@
 <!-- LOVABLE:END -->
 
 ## Project rules
+- Shared UI motion lives in global CSS and the AppShell motion scope, using short one-shot entrances and reduced-motion guards to preserve page state without animation dependencies.
 - Sample data lives in `src/data/*` separate from UI; swap sources there without touching components.
 - Search/filter logic is pure functions in `src/lib/filters.ts` (tested), so it can move server-side later.
 - PersonalProvider owns preferences, saved IDs, follows and preparation marks; account data uses authenticated Cloud functions with owner-only policies, while signed-out browser state stays separate and legacy browser saves are imported once into the signed-in account.
