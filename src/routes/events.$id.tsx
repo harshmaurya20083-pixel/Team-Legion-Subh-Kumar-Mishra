@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowUpRight, CalendarDays, MapPin, Users } from "lucide-react";
 import { publicEventsOptions, usePublicEvents } from "@/lib/event-query";
 import { Button } from "@/components/ui/button";
-import { SampleBadge, SaveButton, EmptyState } from "@/components/bits";
+import { SaveButton, EmptyState } from "@/components/bits";
 import { canRegister, formatDate, isValidUrl } from "@/lib/filters";
 import { EventCard } from "@/components/EventCard";
 import workshopImage from "@/assets/student-workshop.jpg";
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/events/$id")({
   loader: ({ context }) => context.queryClient.ensureQueryData(publicEventsOptions),
   head: ({ params, loaderData }) => {
     const event = loaderData?.find((item) => item.id === params.id && item.status === "published" && item.reviewStatus === "approved");
-    const title = event ? `${event.title}${event.isSample ? " (Sample)" : ""} — MyWorld` : "Event unavailable — MyWorld";
+    const title = event ? `${event.title} — MyWorld` : "Event unavailable — MyWorld";
     const description = event?.description ?? "This event is unavailable. Explore other MyWorld events.";
     return { meta: [{ title }, { name: "description", content: description }, { property: "og:title", content: title }, { property: "og:description", content: description }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" }, ...(!event ? [{ name: "robots", content: "noindex" }] : [])] };
   },
@@ -29,14 +29,14 @@ function EventDetails() {
     <div className="space-y-8">
       <Link to="/explore" className="inline-flex items-center gap-2 text-sm text-primary"><ArrowLeft className="size-4" />Explore Events</Link>
       <header className="space-y-4 border-b pb-7">
-        <div className="flex flex-wrap items-center gap-3"><span className="eyebrow text-primary">{event.category} · {event.format}</span>{event.isSample && <SampleBadge />}</div>
+        <div className="flex flex-wrap items-center gap-3"><span className="eyebrow text-primary">{event.category} · {event.format}</span></div>
         <h1 className="max-w-3xl text-4xl font-semibold md:text-5xl">{event.title}</h1>
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground"><span className="flex items-center gap-2"><CalendarDays className="size-4" />{formatDate(event.date)}{event.endDate !== event.date && ` – ${formatDate(event.endDate)}`}</span><span className="flex items-center gap-2"><MapPin className="size-4" />{event.city} · {event.campus}</span></div>
         <SaveButton id={event.id} />
       </header>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="space-y-8">
-          {event.id === "event-austin-build" && <figure><img src={workshopImage} alt="Illustrative students building a project together in a workshop" width={1536} height={1024} className="aspect-[3/2] w-full rounded-md object-cover" /><figcaption className="mt-2 text-xs text-muted-foreground">Illustrative image · not a photograph of this sample event</figcaption></figure>}
+          {event.id === "event-austin-build" && <figure><img src={workshopImage} alt="Illustrative students building a project together in a workshop" width={1536} height={1024} className="aspect-[3/2] w-full rounded-md object-cover" /><figcaption className="mt-2 text-xs text-muted-foreground">Illustrative image · not a photograph of this event</figcaption></figure>}
           <section><h2 className="mb-3 text-2xl font-semibold">About the event</h2><p className="leading-relaxed text-muted-foreground">{event.description}</p></section>
           <section><h2 className="mb-2 text-2xl font-semibold">Schedule</h2><p className="mb-4 text-xs text-muted-foreground">Local times · {event.timeZone}</p><ol className="divide-y border-y">{event.schedule.map((entry) => <li key={entry.time} className="grid gap-2 py-4 sm:grid-cols-[150px_1fr]"><span className="font-mono text-xs text-primary">{entry.time}</span><span className="text-sm">{entry.activity}</span></li>)}</ol></section>
           <section><h2 className="mb-3 text-2xl font-semibold">Venue & access</h2><p className="text-sm">{event.venue}</p><p className="mt-2 text-sm text-muted-foreground">{event.campus} · {event.city}</p>{event.onlineDetails && <p className="mt-3 text-sm text-muted-foreground">{event.onlineDetails}</p>}</section>
@@ -49,7 +49,7 @@ function EventDetails() {
           <h2 className="text-2xl font-semibold">Registration</h2>
           <p className="text-sm">{event.registrationDeadline ? `Deadline: ${formatDate(event.registrationDeadline)}` : "No deadline supplied"}</p>
           {register ? <Button asChild className="w-full"><a href={event.registrationUrl} target="_blank" rel="noopener noreferrer">Register<ArrowUpRight /></a></Button> : <Button disabled className="w-full">Registration unavailable</Button>}
-          <p className="text-sm leading-relaxed text-muted-foreground">{event.isSample ? "This is a sample event. Registration and official links are disabled." : register ? "Registration opens on the supplied official website. Check the organizer’s requirements before registering." : "Registration is closed or no valid official registration link has been supplied."}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">{event.isSample ? "This event is an example listing. Registration and official links are disabled." : register ? "Registration opens on the supplied official website. Check the organizer’s requirements before registering." : "Registration is closed or no valid official registration link has been supplied."}</p>
           <div className="border-t pt-5"><p className="eyebrow mb-2 text-muted-foreground">Source</p><p className="text-sm">{event.sourceName}</p><p className="mt-2 text-xs text-muted-foreground">Updated {formatDate(event.updatedAt)}</p>{!event.isSample && isValidUrl(event.sourceUrl) && <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm text-primary">Official event source</a>}</div>
         </aside>
       </div>

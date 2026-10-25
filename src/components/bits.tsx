@@ -26,17 +26,6 @@ export function CategoryLabel({ category }: { category: Category }) {
   );
 }
 
-export function SampleBadge() {
-  return (
-    <span
-      title="Demonstration content — not real news, events or listings"
-      className="eyebrow border border-sample px-1.5 py-0.5 text-[0.6rem] text-foreground"
-    >
-      Sample
-    </span>
-  );
-}
-
 export function SaveButton({ id, className }: { id: string; className?: string }) {
   const { isSaved, toggleSaved, ready, busy } = useSaved();
   const saved = isSaved(id);

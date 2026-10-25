@@ -47,12 +47,12 @@ function Home() {
       {/* Intro + search */}
       <section className="space-y-6 border-b pb-8">
         <div>
-          <p className="eyebrow text-primary">Issue 01 · Sample edition</p>
+          <p className="eyebrow text-primary">Issue 01</p>
           <h1 className="mt-2 text-4xl font-semibold leading-tight md:text-5xl">
             MyWorld, <em className="text-primary">closer to you.</em>
           </h1>
           <p className="mt-3 max-w-lg text-muted-foreground">
-            Find events, useful opportunities and your next community.
+            Find events, useful opportunities and your next community. Listings shown here are examples.
           </p>
         </div>
         <form
@@ -75,7 +75,7 @@ function Home() {
         <Link to="/internships" className="inline-flex items-center gap-2 text-sm text-primary hover:underline"><BriefcaseBusiness className="size-4" />Internship Opportunities<ArrowRight className="size-4" /></Link>
       </section>
 
-      <section><SectionHeading eyebrow="Reviewed events · Labelled samples" title="Coming up next" action={<Link to="/explore" className="text-sm text-primary">Explore Events</Link>} /><div className="mb-5 flex flex-wrap gap-2">{EVENT_CATEGORIES.map((category) => <Button key={category} asChild variant="outline" size="sm"><Link to="/explore" search={{ category }}>{category}</Link></Button>)}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{upcoming.slice(0, 3).map((event) => <EventCard key={event.id} event={event} />)}</div></section>
+      <section><SectionHeading eyebrow="Reviewed events" title="Coming up next" action={<Link to="/explore" className="text-sm text-primary">Explore Events</Link>} /><div className="mb-5 flex flex-wrap gap-2">{EVENT_CATEGORIES.map((category) => <Button key={category} asChild variant="outline" size="sm"><Link to="/explore" search={{ category }}>{category}</Link></Button>)}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{upcoming.slice(0, 3).map((event) => <EventCard key={event.id} event={event} />)}</div></section>
 
       <section><SectionHeading eyebrow="Based on your choices" title="For you" action={<Link to="/preferences" className="text-sm text-primary">Edit preferences</Link>} />{!ready ? <p role="status">Loading your recommendations…</p> : recommendations.length ? <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{recommendations.slice(0,6).map(({event,reasons})=><div key={event.id} className="space-y-3"><EventCard event={event}/><ul className="space-y-1 text-xs text-primary">{reasons.map(r=><li key={r}>{r}</li>)}</ul></div>)}</div> : <p className="text-sm text-muted-foreground">No preference matches yet. Choose interests or a location in Preferences, or explore all events.</p>}</section>
 

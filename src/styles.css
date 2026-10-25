@@ -40,7 +40,6 @@
   --color-ring: var(--ring);
   --color-ink: var(--ink);
   --color-paper: var(--paper);
-  --color-sample: var(--sample);
   --color-cat-technology: var(--cat-technology);
   --color-cat-education: var(--cat-education);
   --color-cat-careers: var(--cat-careers);
@@ -76,7 +75,6 @@
   --border: oklch(0.86 0.015 85);
   --input: oklch(0.86 0.015 85);
   --ring: oklch(0.48 0.2 262);
-  --sample: oklch(0.72 0.14 65);
 
   --cat-technology: oklch(0.48 0.2 262);
   --cat-education: oklch(0.55 0.12 160);
@@ -112,7 +110,6 @@
   --border: oklch(0.31 0.018 262);
   --input: oklch(0.31 0.018 262);
   --ring: oklch(0.7 0.16 262);
-  --sample: oklch(0.8 0.13 65);
   --cat-technology: oklch(0.7 0.16 262);
   --cat-education: oklch(0.72 0.12 160);
   --cat-careers: oklch(0.74 0.14 40);
