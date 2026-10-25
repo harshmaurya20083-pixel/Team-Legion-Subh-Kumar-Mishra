@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CommunityCard } from "@/components/CommunityCard";
 import { FilterGroup, SearchInput } from "@/components/FilterGroup";
 import { EmptyState } from "@/components/bits";
-import { communities } from "@/data/communities";
+import { publicCommunitiesOptions, usePublicCommunities } from "@/lib/community-query";
 import { CATEGORIES, PLATFORMS } from "@/data/types";
 import { filterCommunities, toggleValue } from "@/lib/filters";
 import { usePersonal } from "@/lib/personal";
@@ -13,7 +13,7 @@ import { EventCard } from "@/components/EventCard";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/communities")({
-  loader: ({context}) => context.queryClient.ensureQueryData(publicEventsOptions),
+  loader: ({context}) => Promise.all([context.queryClient.ensureQueryData(publicEventsOptions), context.queryClient.ensureQueryData(publicCommunitiesOptions)]),
   head: () => ({
     meta: [
       { title: "Communities — MyWorld" },
@@ -30,12 +30,13 @@ export const Route = createFileRoute("/communities")({
 function Communities() {
   const {state,ready}=usePersonal();
   const events=usePublicEvents();
+  const allCommunities=usePublicCommunities();
   const upcoming=followedEvents(events,state.marks.filter(m=>m.kind==='follow').map(m=>m.id),new Date().toISOString().slice(0,10));
   const [onlyFollowed,setOnlyFollowed]=useState(false);
   const [query, setQuery] = useState("");
   const [platforms, setPlatforms] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
-  const results = filterCommunities(communities, { query, platforms, categories }).filter(c=>!onlyFollowed||state.marks.some(m=>m.kind==='follow'&&m.id===c.id));
+  const results = filterCommunities(allCommunities, { query, platforms, categories }).filter(c=>!onlyFollowed||state.marks.some(m=>m.kind==='follow'&&m.id===c.id));
 
   return (
     <div className="space-y-8">
