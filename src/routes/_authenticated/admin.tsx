@@ -6,7 +6,7 @@ import { ShieldCheck, AlertTriangle, Check, X, MessageSquare, Users, Plus } from
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { adminQueue, moderateEvent } from '@/lib/events.functions';
+import { adminQueue, moderateEvent, updateEventLink } from '@/lib/events.functions';
 import { adminListCommunities, archiveCommunity, communityInputSchema, saveCommunity } from '@/lib/communities.functions';
 import { moderationSchema } from '@/lib/submission';
 import { CATEGORIES, PLATFORMS } from '@/data/types';
