@@ -66,7 +66,7 @@ export function InfoCard({ item, variant = "standard" }: { item: InfoItem; varia
   }
 
   return (
-    <article className="flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5 transition-colors hover:border-foreground">
+    <article className="card-hover flex h-full min-w-0 flex-col gap-3 rounded-md border bg-card p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <CategoryLabel category={item.category} />
         {item.isSample && <SampleBadge />}
