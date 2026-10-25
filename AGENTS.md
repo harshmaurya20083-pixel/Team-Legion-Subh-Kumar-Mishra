@@ -22,3 +22,4 @@
 - Published event queries merge preserved sample fixtures with approved shared records across Home, Explore, details and Saved; never seed or overwrite browser saves when connecting Cloud.
 - Recommendation rules are pure functions in src/lib/personalization.ts and src/lib/internships.ts with concrete tests; explain each preference or listing match without assessing ability, and community feeds use only explicit community IDs.
 - Duplicate RPCs redact unpublished details unless the caller owns the submission or is an admin; unavailable saved IDs stay removable without fetching private listings.
+- Communities are admin-managed: `community_records` (status published/archived, admin-only writes via has_role, public read of published rows) merges with sample fixtures through listPublishedCommunities; join URLs are allowlisted to official WhatsApp/Discord/Telegram/Reddit domains in both the zod schema and the validate_community_record trigger.
