@@ -1,5 +1,6 @@
 // A single community in the directory. The Join button only works when a real link exists.
-import { ExternalLink, MapPin, MessageCircle, UserPlus, UserCheck } from "lucide-react";
+import { useRef, useState } from "react";
+import { Check, Copy, ExternalLink, MapPin, MessageCircle, UserPlus, UserCheck } from "lucide-react";
 import type { Community } from "@/data/types";
 import { isValidUrl } from "@/lib/filters";
 import { CategoryLabel } from "./bits";
@@ -12,6 +13,29 @@ function isWhatsAppLink(url: string) {
 
 export function CommunityCard({ community }: { community: Community }) {
   const {state,toggle,ready,busy}=usePersonal();
+  const [copied,setCopied]=useState(false);
+  const copyTimer=useRef<number|undefined>(undefined);
+  const copyLink=async()=>{
+    const url=community.url;
+    if(!url) return;
+    try{
+      await navigator.clipboard.writeText(url);
+    }catch{
+      // Fallback for browsers/contexts without the async clipboard API.
+      const ta=document.createElement('textarea');
+      ta.value=url;
+      ta.setAttribute('readonly','');
+      ta.style.position='fixed';
+      ta.style.opacity='0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    window.clearTimeout(copyTimer.current);
+    copyTimer.current=window.setTimeout(()=>setCopied(false),2000);
+  };
   const followed=state.marks.some(m=>m.kind==='follow'&&m.id===community.id);
   const hasLink = isValidUrl(community.url);
   return (
@@ -39,13 +63,19 @@ export function CommunityCard({ community }: { community: Community }) {
         <Button className="mb-3" variant={followed?'secondary':'outline'} aria-pressed={followed} disabled={!ready||busy} onClick={()=>toggle('follow',community.id)}>{followed?<UserCheck />:<UserPlus />}{followed?'Following':'Follow community'}</Button>
         {hasLink ? (
           isWhatsAppLink(community.url!) ? (
-            <Button asChild><a
-              href={community.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Join on WhatsApp <MessageCircle className="h-3.5 w-3.5" />
-            </a></Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button asChild><a
+                href={community.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join on WhatsApp <MessageCircle className="h-3.5 w-3.5" />
+              </a></Button>
+              <Button variant="outline" onClick={copyLink} aria-label="Copy WhatsApp invite link">
+                {copied?<Check className="h-3.5 w-3.5" />:<Copy className="h-3.5 w-3.5" />}{copied?'Copied':'Copy link'}
+              </Button>
+              {copied && <span className="text-xs text-muted-foreground">Invite link copied — paste it into WhatsApp or a browser.</span>}
+            </div>
           ) : (
             <Button asChild><a
               href={community.url}
