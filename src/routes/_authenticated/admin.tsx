@@ -2,11 +2,14 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useServerFn } from '@tanstack/react-start';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { ShieldCheck, AlertTriangle, Check, X, MessageSquare } from 'lucide-react';
+import { ShieldCheck, AlertTriangle, Check, X, MessageSquare, Users, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { adminQueue, moderateEvent } from '@/lib/events.functions';
+import { adminListCommunities, archiveCommunity, communityInputSchema, saveCommunity } from '@/lib/communities.functions';
 import { moderationSchema } from '@/lib/submission';
+import { CATEGORIES, PLATFORMS } from '@/data/types';
 export const Route = createFileRoute('/_authenticated/admin')({ head: () => ({ meta: [{ title: 'Content moderation — MyWorld' }, { name: 'description', content: 'Restricted MyWorld event review workspace.' }, { property: 'og:title', content: 'Content moderation — MyWorld' }, { property: 'og:description', content: 'Restricted event moderation.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary' }, { name: 'robots', content: 'noindex' }] }), component: Admin });
 function Admin() {
   const load = useServerFn(adminQueue), moderate = useServerFn(moderateEvent); const qc = useQueryClient();
