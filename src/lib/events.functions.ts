@@ -59,6 +59,15 @@ export const moderateEvent = createServerFn({ method: 'POST' }).middleware([requ
   if (error) throw new Error(error.code === '23505' ? 'An official URL is already used by a published event. Resolve the duplicate before publishing.' : 'Review was not saved. The event may be expired; try again.');
   return { ok: true };
 });
+export const updateEventLink = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).inputValidator(v => z.object({ id: z.string().uuid(), registrationUrl: z.string().trim().max(2048).default(''), registrationDeadline: z.string().trim().max(10).default('') }).parse(v)).handler(async ({ data, context }) => {
+  const { data: admin } = await context.supabase.rpc('has_role', { _user_id: context.userId, _role: 'admin' });
+  if (!admin) throw new Error('Administrator access required');
+  if (data.registrationUrl && !/^https?:\/\/\S+$/.test(data.registrationUrl)) throw new Error('Enter a valid URL starting with http:// or https://');
+  if (data.registrationDeadline && !/^\d{4}-\d{2}-\d{2}$/.test(data.registrationDeadline)) throw new Error('Enter a valid deadline date');
+  const { error } = await context.supabase.rpc('update_event_registration', { record_id: data.id, registration_url: data.registrationUrl || null, registration_deadline: data.registrationDeadline || null });
+  if (error) throw new Error(error.code === '23505' ? 'That URL is already used by another published event.' : 'Could not save the registration link. Check the URL and deadline, then try again.');
+  return { ok: true };
+});
 export const myAdminStatus = createServerFn({ method: 'POST' }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
   const { data: admin } = await context.supabase.rpc('has_role', { _user_id: context.userId, _role: 'admin' });
   return { admin: admin === true };
