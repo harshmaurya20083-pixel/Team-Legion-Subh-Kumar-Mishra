@@ -1,5 +1,6 @@
 // A single community in the directory. The Join button only works when a real link exists.
-import { ExternalLink, MapPin, MessageCircle, UserPlus, UserCheck } from "lucide-react";
+import { useRef, useState } from "react";
+import { Check, Copy, ExternalLink, MapPin, MessageCircle, UserPlus, UserCheck } from "lucide-react";
 import type { Community } from "@/data/types";
 import { isValidUrl } from "@/lib/filters";
 import { CategoryLabel } from "./bits";
