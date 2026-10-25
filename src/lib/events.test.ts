@@ -12,10 +12,10 @@ describe("Event discovery rules", () => {
     for (const query of ["CAMPUS BUILD", "prototype", "Campus Hackathon Teams", "teams"]) expect(filterEvents(events, { ...empty, query }, today).map((event) => event.id)).toContain("event-austin-build");
   });
   it("combines category, format, city, skills and eligibility", () => {
-    expect(filterEvents(events, { ...empty, categories: ["Hackathons"], formats: ["Offline"], locations: ["Austin"], skills: ["JavaScript"], eligibility: ["College students"] }, today).map((event) => event.id)).toEqual(["event-austin-build"]);
+    expect(filterEvents(events, { ...empty, categories: ["Hackathons"], formats: ["Offline"], locations: ["Mumbai"], skills: ["JavaScript"], eligibility: ["College students"] }, today).map((event) => event.id)).toEqual(["event-austin-build"]);
   });
   it("supports manual campus selection and unknown location empty results", () => {
-    expect(filterEvents(events, { ...empty, locations: ["austin campus"] }, today).map((event) => event.id)).toEqual(["event-austin-build", "event-austin-pitch"]);
+    expect(filterEvents(events, { ...empty, locations: ["mumbai central campus"] }, today).map((event) => event.id)).toEqual(["event-austin-build", "event-austin-pitch"]);
     expect(filterEvents(events, { ...empty, locations: ["Unlisted city"] }, today)).toEqual([]);
   });
   it("Virtual selects online events without assigning invented distances", () => {
